@@ -1,5 +1,6 @@
 # Introduction : fondement sur papier
 1. N-grammes : deviner le prochain mot
+    * premiers modèles de l'IA
     * proba
     * température
 2. Embedding : représentation des mots par une machine
@@ -10,10 +11,11 @@
     * l'IA fait de plus gros calcul
 
 # Transition vers la disccussion avec l'IA
-4. Trouver l'humain : première interaction avec un LLM
-    * Poser des questions à l'IA et observer ses réponses
+4. Trouver l'humain : plusieurs réponses à une question sont anonymisées dont certaines sont données par une IA et d'autres sont données par les élèves, l'objectif est que les deux binômes se retrouvent
+    * première interaction avec un LLM
+    * poser des questions à l'IA et observer ses réponses
     * voir la température
-    * comment le différencier d'un humain ?
+    * comment différencier l'IA d'un humain ?
 
 # Utilisation du modèle
 5. Reconstituer la lettre : lettres et mots manquants
