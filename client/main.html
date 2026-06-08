@@ -1,0 +1,23 @@
+<textarea id="prompt"></textarea>
+<button onclick="envoyer()">Envoyer</button>
+
+<script>
+async function envoyer() {
+
+    const r = await fetch(
+        "http://localhost:8000",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                prompt:
+                document.getElementById("prompt").value
+            })
+        }
+    );
+
+    console.log(await r.json());
+}
+</script>
