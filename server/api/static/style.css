@@ -1,0 +1,337 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Special+Elite&display=swap');
+
+:root {
+    color-scheme: dark;
+    color: #f1e4c7;
+    background: #110b06;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: radial-gradient(circle at top left, rgba(210, 170, 95, 0.08), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(160, 110, 40, 0.08), transparent 22%),
+        #1b140d;
+    color: #f1e4c7;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.app-shell {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.sidebar,
+.content {
+    position: relative;
+}
+
+.sidebar {
+    min-height: calc(100vh - 4rem);
+    background: rgba(37, 25, 15, 0.92);
+    border: 1px solid rgba(212, 163, 75, 0.18);
+    border-radius: 28px;
+    padding: 2rem 1.75rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.brand-mark {
+    font-size: 2.9rem;
+    line-height: 1;
+    color: #d69f46;
+}
+
+.brand-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.15rem;
+    text-transform: uppercase;
+}
+
+.brand-subtitle {
+    margin: 0.25rem 0 0;
+    color: #b99a6d;
+    font-size: 0.86rem;
+}
+
+.sidebar-intro {
+    margin: 0 0 1.8rem;
+    color: #d0b988;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.step-item {
+    padding: 0.95rem 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 163, 75, 0.12);
+    background: rgba(219, 176, 84, 0.03);
+}
+
+.step-item.current {
+    border-color: #d7b45a;
+    background: rgba(215, 180, 96, 0.12);
+}
+
+.step-item.future {
+    opacity: 0.55;
+}
+
+.step-item a,
+.step-item span {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    align-items: center;
+    color: inherit;
+}
+
+.step-number {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(215, 180, 96, 0.16);
+    color: #f7e3a1;
+    font-weight: 700;
+}
+
+.step-label {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.content {
+    min-height: calc(100vh - 4rem);
+}
+
+.panel {
+    background: rgba(26, 18, 10, 0.92);
+    border: 1px solid rgba(212, 163, 75, 0.18);
+    border-radius: 32px;
+    padding: 2.4rem;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.25);
+}
+
+.panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.panel-badge {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    color: #d6b060;
+    font-size: 0.92rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18rem;
+}
+
+h1 {
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: -0.04rem;
+}
+
+.panel-link {
+    color: #cdb078;
+    font-size: 0.95rem;
+    font-weight: 600;
+    align-self: center;
+}
+
+.paragraph {
+    margin: 0 0 1.4rem;
+    line-height: 1.85;
+    color: #e7d8b7;
+    font-size: 1rem;
+}
+
+.answer-form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.answer-label {
+    font-weight: 600;
+    letter-spacing: 0.04rem;
+    text-transform: uppercase;
+    color: #d7b86f;
+    font-size: 0.85rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    border: 1px solid rgba(212, 163, 75, 0.2);
+    border-radius: 16px;
+    padding: 0.95rem 1rem;
+    background: rgba(25, 16, 9, 0.88);
+    color: #f3e6c2;
+    outline: none;
+}
+
+input[type="text"]:focus {
+    border-color: #d7b45a;
+    box-shadow: 0 0 0 3px rgba(215, 180, 90, 0.08);
+}
+
+button {
+    border: none;
+    border-radius: 16px;
+    padding: 1rem 1.4rem;
+    background: linear-gradient(135deg, #c59d4d, #d7b35c);
+    color: #1a1208;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+
+.message {
+    margin-top: 1.6rem;
+    border-radius: 18px;
+    padding: 1rem 1.2rem;
+    font-size: 0.95rem;
+}
+
+.message-error {
+    background: rgba(178, 68, 48, 0.14);
+    border: 1px solid rgba(178, 68, 48, 0.25);
+    color: #f0d7c0;
+}
+
+.message-hint {
+    background: rgba(148, 118, 57, 0.12);
+    border: 1px solid rgba(212, 163, 75, 0.2);
+    color: #e8d6a5;
+}
+
+.start-body {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+}
+
+.start-shell {
+    width: min(900px, 100%);
+}
+
+.welcome-panel {
+    background: rgba(30, 22, 15, 0.96);
+    border: 1px solid rgba(212, 163, 75, 0.18);
+    border-radius: 32px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 32px 90px rgba(0, 0, 0, 0.28);
+    text-align: center;
+}
+
+.eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #d7b86f;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.22rem;
+    text-transform: uppercase;
+}
+
+.welcome-panel h1 {
+    margin: 0;
+    font-size: clamp(2.3rem, 4vw, 3.4rem);
+    line-height: 1.05;
+}
+
+.welcome-panel p {
+    margin: 1.4rem auto 2rem;
+    max-width: 34rem;
+    color: #dfd1a8;
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+.start-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #c59d4d, #d7b35c);
+    color: #1a1208;
+    font-weight: 700;
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22);
+}
+
+.welcome-note {
+    margin-top: 1.8rem;
+    color: #d2be90;
+    font-size: 0.96rem;
+    line-height: 1.75;
+}
+
+@media (max-width: 960px) {
+    .app-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 720px) {
+    .app-shell {
+        padding: 1.2rem;
+        gap: 1.2rem;
+    }
+
+    .panel {
+        padding: 1.8rem;
+    }
+}
