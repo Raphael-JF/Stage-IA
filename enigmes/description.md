@@ -1,19 +1,44 @@
-# Introduction, fondement
-* N-grammes : deviner le prochain mot, proba
-* Produit matriciel : plus gros calcul, encodage
-* Embedding : représentation des moits par une machine
+# Introduction : fondement sur papier
+1. N-grammes : deviner le prochain mot
+    * proba
+    * température
+2. Embedding : représentation des mots par une machine
+    * relation sens-distance
+    * vecteur
+3. Produit matriciel : comment marche le produit matriciel
+    * encodage
+    * l'IA fait de plus gros calcul
 
-* Définir un LLM
-
-# Activité Chill
-
-* Qui est l'humain ? Première interaction avec un LLM
+# Transition vers la disccussion avec l'IA
+4. Trouver l'humain : première interaction avec un LLM
+    * Poser des questions à l'IA et observer ses réponses
+    * voir la température
+    * comment le différencier d'un humain ?
 
 # Utilisation du modèle
+5. Reconstituer la lettre : lettres et mots manquants
+    * rapidité
+    * performance (exemple de domain où l'IA fait mieux que l'humain et pas seulement en terme de vitesse)
 
-* Corriger les fautes d'orthographes d'une lettre
-    -- Rapidité
-    -- Performance (exemple de domain où l'IA fait mieux que l'humain et pas seulement en terme de vitesse)
+6. Trouver le trésors : chercher un motif caché dans une carte
+    * ASCII
+    * rapidité
 
+7. La voix divine : obtenir des réponses
+    * fausses infos
+    * hallucination
+    * vérifier ses sources
 
-:qu:q
+8. Trouver le mot de passe : Gandalf
+    * contrôle des réponses
+    * censure des contenus
+
+9. Repérer les images générées par l'IA
+    * allarme au deepfake
+
+# Bilan
+* A la fin de chaque activité faire un point sur ce qu'ils ont appris, moment de discussion
+* DDRS : faire un bilan énergétique de la séance
+    * mix énergétique
+    * émission carbone
+    * consommation en eau
