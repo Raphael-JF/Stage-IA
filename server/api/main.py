@@ -96,7 +96,7 @@ def is_correct_answer(response: str, accepted_answers: list[str]) -> bool:
 
 @app.get('/')
 def landing(request: Request):
-    return templates.TemplateResponse('index.html', {'request': request})
+    return templates.TemplateResponse(request, 'index.html', {'request': request})
 
 
 @app.get('/enigme/{enigma_id}')
@@ -107,6 +107,7 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
         return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
 
     return templates.TemplateResponse(
+        request,
         'enigme.html',
         {
             'request': request,
