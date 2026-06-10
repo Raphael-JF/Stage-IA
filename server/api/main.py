@@ -194,6 +194,7 @@ def render_discussion_page(
         {
             'request': request,
             'enigmes': ENIGMES,
+            'active_step_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
             'current_enigma_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
             'chat_history': chat_history,
             'discussion_temperature': discussion_temperature,
@@ -247,6 +248,7 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
             'request': request,
             'current': enigma,
             'enigmes': ENIGMES,
+            'active_step_id': enigma['id'],
             'error': error == 'wrong',
             'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
             'visited': visited,

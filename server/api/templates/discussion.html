@@ -1,128 +1,71 @@
-<!DOCTYPE html>
-<html lang="fr">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interlude - Discussion avec Otto</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block page_title %}Interlude - Discussion avec Otto{% endblock %}
+{% block body_attrs %}data-current-enigma="{{ current_enigma_id }}"{% endblock %}
+{% block brand_subtitle %}Menu discussion{% endblock %}
+{% block sidebar_intro %}Le sommaire reste accessible pendant votre échange avec Otto.{% endblock %}
+{% block panel_badge %}Interlude{% endblock %}
+{% block panel_title %}Parler à Otto{% endblock %}
+{% block sidebar_extra_item %}
+<li class="step-item current side-branch">
+    <a href="/interlude/discussion">
+        <span class="step-number">✦</span>
+        <span class="step-label">Interlude: discussion avec Otto</span>
+    </a>
+</li>
+{% endblock %}
+{% block panel_content %}
+<p class="paragraph">Vous pouvez discuter librement à Otto.</p>
 
-<body data-current-enigma="{{ current_enigma_id }}">
-    <div class="app-shell">
-        <aside class="sidebar">
-            <div class="brand">
-                <span class="brand-mark">⚓</span>
-                <div>
-                    <p class="brand-title">Malediction du Savoir</p>
-                    <p class="brand-subtitle">Menu discussion</p>
-                </div>
-            </div>
-            <div class="discussion">
-                <form method="post" action="/progress/reset"
-                    onsubmit="return confirm('Réinitialiser la progression ?');" style="margin:8px 0">
-                    <button type="submit" class="reset-btn">Réinitialiser la progression</button>
-                </form>
-                <nav class="sidebar-nav">
-                    <ol class="step-list">
-                        {% for item in enigmes %}
-                        {% set is_current = (item.id == current_enigma_id) %}
-                        {% set is_visited = item.id in visited %}
-                        {% set is_completed = item.id in completed %}
-                        <li
-                            class="step-item {% if is_current %}current{% elif is_visited or is_completed %}past{% else %}future{% endif %}">
-                            {% if is_current or is_visited or is_completed %}
-                            <a href="/enigme/{{ item.id }}">
-                                <span class="step-number">{{ item.id }}</span>
-                                <span class="step-label">{{ item.title }}</span>
-                            </a>
-                            {% else %}
-                            <span class="locked">
-                                <span class="step-number">{{ item.id }}</span>
-                                <span class="step-label">???</span>
-                            </span>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                        <li class="step-item current side-branch">
-                            <a href="/interlude/discussion">
-                                <span class="step-number">✦</span>
-                                <span class="step-label">Interlude: discussion avec Otto</span>
-                            </a>
-                        </li>
-                    </ol>
-                </nav>
-            </div>
-        </aside>
-
-        <main class="content">
-            <section class="panel">
-                <div class="panel-head">
-                    <div>
-                        <span class="panel-badge">Interlude</span>
-                        <h1>Parler à Otto</h1>
-                    </div>
-                </div>
-
-                <p class="paragraph">Vous pouvez discuter librement à Otto.</p>
-
-                <div class="chat-shell">
-                    <div class="chat-bubble">
-                        <div class="chat-log" id="chat-log">
-                            {% if chat_history %}
-                            {% for entry in chat_history %}
-                            <article class="chat-item chat-{{ entry.role }}">
-                                <p class="chat-role" data-speaker="{{ entry.role }}">{% if entry.role == 'user' %}<span
-                                        class="speaker-icon">💬</span>Vous{% else %}<span
-                                        class="speaker-icon">⚙️</span>Otto{% endif %}</p>
-                                <p class="chat-content">{{ entry.content }}</p>
-                            </article>
-                            {% endfor %}
-                            {% else %}
-                            <div class="message message-hint">Commencez la discussion: Otto vous aide a raisonner
-                                sans devoiler directement la solution.</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <form class="answer-form" method="post" action="/interlude/discussion">
-                        <input type="hidden" name="history" value='{{ chat_history|tojson }}'>
-                        <label class="answer-label" for="discussion-message">Votre message</label>
-                        <div class="prompt-bar">
-                            <input id="discussion-message" name="message" type="text" autocomplete="off"
-                                placeholder="Ex: Je bloque, peux-tu me guider sans donner la reponse ?" required>
-
-                            <div class="prompt-actions">
-                                <button type="button" id="temp-button" class="temp-button"
-                                    title="Contrôler la créativité">
-                                    🌡️
-                                </button>
-
-                                <div id="temp-menu" class="temp-menu hidden">
-                                    <div class="temp-menu-content">
-                                        <div class="temp-menu-header">Créativité d'Otto</div>
-
-                                        <input id="temperature" class="temp-slider" name="temperature" type="range"
-                                            min="0" max="1.5" step="0.1" value="{{ discussion_temperature }}">
-
-                                        <div class="temp-menu-footer">
-                                            <span class="temp-label">Logique</span>
-                                            <output id="temperature-value" class="temp-display"></output>
-                                            <span class="temp-label">Créatif</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="send-button">↳</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </section>
-        </main>
+<div class="chat-shell">
+    <div class="chat-bubble">
+        <div class="chat-log" id="chat-log">
+            {% if chat_history %}
+            {% for entry in chat_history %}
+            <article class="chat-item chat-{{ entry.role }}">
+                <p class="chat-role" data-speaker="{{ entry.role }}">{% if entry.role == 'user' %}<span
+                        class="speaker-icon">💬</span>Vous{% else %}<span class="speaker-icon">⚙️</span>Otto{% endif %}
+                </p>
+                <p class="chat-content">{{ entry.content }}</p>
+            </article>
+            {% endfor %}
+            {% else %}
+            <div class="message message-hint">Commencez la discussion: Otto vous aide a raisonner sans devoiler
+                directement la solution.</div>
+            {% endif %}
+        </div>
     </div>
 
-    <script src="/static/script.js"></script>
-</body>
+    <form class="answer-form" method="post" action="/interlude/discussion">
+        <input type="hidden" name="history" value='{{ chat_history|tojson }}'>
+        <label class="answer-label" for="discussion-message">Votre message</label>
+        <div class="prompt-bar">
+            <input id="discussion-message" name="message" type="text" autocomplete="off"
+                placeholder="Ex: Je bloque, peux-tu me guider sans donner la reponse ?" required>
 
-</html>
+            <div class="prompt-actions">
+                <button type="button" id="temp-button" class="temp-button" title="Contrôler la créativité">
+                    🌡️
+                </button>
+
+                <div id="temp-menu" class="temp-menu hidden">
+                    <div class="temp-menu-content">
+                        <div class="temp-menu-header">Créativité d'Otto</div>
+
+                        <input id="temperature" class="temp-slider" name="temperature" type="range" min="0" max="1.5"
+                            step="0.1" value="{{ discussion_temperature }}">
+
+                        <div class="temp-menu-footer">
+                            <span class="temp-label">Logique</span>
+                            <output id="temperature-value" class="temp-display"></output>
+                            <span class="temp-label">Créatif</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="send-button">↳</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

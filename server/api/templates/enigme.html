@@ -1,97 +1,43 @@
-<!DOCTYPE html>
-<html lang="fr">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Énigme {{ current.id }} - {{ current.title }}</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block page_title %}Énigme {{ current.id }} - {{ current.title }}{% endblock %}
+{% block body_attrs %}data-current-enigma="{{ current.id }}"{% endblock %}
+{% block brand_subtitle %}Interface énigmes{% endblock %}
+{% block sidebar_intro %}Suivez votre progression à gauche. Seule l'énigme en cours est affichée ici.{% endblock %}
+{% block panel_badge %}Énigme {{ current.id }}{% endblock %}
+{% block panel_title %}{{ current.title }}{% endblock %}
+{% block panel_action %}
+<form method="post" action="/progress/reset" onsubmit="return confirm('Réinitialiser la progression ?');"
+    class="panel-reset-form">
+    <button type="submit" class="panel-link">Réinitialiser la progression</button>
+</form>
+{% endblock %}
+{% block sidebar_extra_item %}
+{% if discussion_available %}
+<li class="step-item side-branch">
+    <a href="/interlude/discussion">
+        <span class="step-number">✦</span>
+        <span class="step-label">Interlude: discussion avec le Gardien</span>
+    </a>
+</li>
+{% endif %}
+{% endblock %}
+{% block panel_content %}
+{% for paragraph in current.paragraphs %}
+<p class="paragraph">{{ paragraph }}</p>
+{% endfor %}
 
-<body data-current-enigma="{{ current.id }}">
-    <div class="app-shell">
-        <aside class="sidebar">
-            <div class="brand">
-                <span class="brand-mark">⚓</span>
-                <div>
-                    <p class="brand-title">Malédiction du Savoir</p>
-                    <p class="brand-subtitle">Interface énigmes</p>
-                </div>
-            </div>
-            <p class="sidebar-intro">Suivez votre progression à gauche. Seule l'énigme en cours est affichée ici.</p>
-            <form method="post" action="/progress/reset" onsubmit="return confirm('Réinitialiser la progression ?');"
-                style="margin:8px 0">
-                <button type="submit" class="reset-btn">Réinitialiser la progression</button>
-            </form>
-            <nav class="sidebar-nav">
-                <ol class="step-list">
-                    {% for item in enigmes %}
-                    {% set is_current = (item.id == current.id) %}
-                    {% set is_visited = item.id in visited %}
-                    {% set is_completed = item.id in completed %}
-                    <li
-                        class="step-item {% if is_current %}current{% elif is_visited or is_completed %}past{% else %}future{% endif %}">
-                        {% if is_current or is_visited or is_completed %}
-                        <a href="/enigme/{{ item.id }}">
-                            <span class="step-number">{{ item.id }}</span>
-                            <span class="step-label">{{ item.title }}</span>
-                        </a>
-                        {% else %}
-                        <span class="locked">
-                            <span class="step-number">{{ item.id }}</span>
-                            <span class="step-label">???</span>
-                        </span>
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-                    {% if discussion_available %}
-                    <li class="step-item side-branch">
-                        <a href="/interlude/discussion">
-                            <span class="step-number">✦</span>
-                            <span class="step-label">Interlude: discussion avec le Gardien</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ol>
-            </nav>
-        </aside>
+<form class="answer-form" method="post" action="/enigme/{{ current.id }}/submit">
+    <label class="answer-label" for="answer">Votre réponse</label>
+    <input id="answer" name="response" type="text" autocomplete="off" placeholder="Entrez votre réponse ici" required>
+    <button type="submit">Valider</button>
+</form>
 
-        <main class="content">
-            <section class="panel">
-                <div class="panel-head">
-                    <div>
-                        <span class="panel-badge">Énigme {{ current.id }}</span>
-                        <h1>{{ current.title }}</h1>
-                    </div>
-                    <form method="post" action="/progress/reset"
-                        onsubmit="return confirm('Réinitialiser la progression ?');" class="panel-reset-form">
-                        <button type="submit" class="panel-link">Réinitialiser la progression</button>
-                    </form>
-                </div>
+{% if error %}
+<div class="message message-error">Mauvaise réponse. Réessaie.</div>
+{% endif %}
 
-                {% for paragraph in current.paragraphs %}
-                <p class="paragraph">{{ paragraph }}</p>
-                {% endfor %}
-
-                <form class="answer-form" method="post" action="/enigme/{{ current.id }}/submit">
-                    <label class="answer-label" for="answer">Votre réponse</label>
-                    <input id="answer" name="response" type="text" autocomplete="off"
-                        placeholder="Entrez votre réponse ici" required>
-                    <button type="submit">Valider</button>
-                </form>
-
-                {% if error %}
-                <div class="message message-error">Mauvaise réponse. Réessaie.</div>
-                {% endif %}
-
-                {% if current.hint %}
-                <div class="message message-hint">{{ current.hint }}</div>
-                {% endif %}
-            </section>
-        </main>
-    </div>
-
-    <script src="/static/script.js"></script>
-</body>
-
-</html>
+{% if current.hint %}
+<div class="message message-hint">{{ current.hint }}</div>
+{% endif %}
+{% endblock %}

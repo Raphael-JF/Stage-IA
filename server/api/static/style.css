@@ -88,6 +88,10 @@ input {
     font-size: 0.95rem;
 }
 
+.sidebar-reset-form {
+    margin: 8px 0 1rem;
+}
+
 .step-list {
     list-style: none;
     padding: 0;
