@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Énigme {{ current.id }} - {{ current.title }}</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body data-current-enigma="{{ current.id }}">
     <div class="app-shell">
         <aside class="sidebar">
@@ -17,11 +19,16 @@
                 </div>
             </div>
             <p class="sidebar-intro">Suivez votre progression à gauche. Seule l'énigme en cours est affichée ici.</p>
+            <form method="post" action="/progress/reset" onsubmit="return confirm('Réinitialiser la progression ?');"
+                style="margin:8px 0">
+                <button type="submit" class="reset-btn">Réinitialiser la progression</button>
+            </form>
             <nav class="sidebar-nav">
                 <ol class="step-list">
                     {% for item in enigmes %}
-                    <li class="step-item {% if item.id == current.id %}current{% elif item.id < current.id %}past{% else %}future{% endif %}">
-                        {% if item.id <= current.id %}
+                    <li
+                        class="step-item {% if item.id == current.id %}current{% elif item.id in completed %}past{% else %}future{% endif %}">
+                        {% if item.id == current.id or item.id in completed %}
                         <a href="/enigme/{{ item.id }}">
                             <span class="step-number">{{ item.id }}</span>
                             <span class="step-label">{{ item.title }}</span>
@@ -62,7 +69,8 @@
 
                 <form class="answer-form" method="post" action="/enigme/{{ current.id }}/submit">
                     <label class="answer-label" for="answer">Votre réponse</label>
-                    <input id="answer" name="response" type="text" autocomplete="off" placeholder="Entrez votre réponse ici" required>
+                    <input id="answer" name="response" type="text" autocomplete="off"
+                        placeholder="Entrez votre réponse ici" required>
                     <button type="submit">Valider</button>
                 </form>
 
@@ -79,4 +87,5 @@
 
     <script src="/static/script.js"></script>
 </body>
+
 </html>

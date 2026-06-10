@@ -213,6 +213,22 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
     except ValueError:
         return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
 
+    # read completed enigma ids from cookie
+    progress_cookie = request.cookies.get('progress', '[]')
+    try:
+        completed = json.loads(progress_cookie)
+        if not isinstance(completed, list):
+            completed = []
+        # normalize to ints
+        normalized_completed: list[int] = []
+        for v in completed:
+            try:
+                normalized_completed.append(int(v))
+            except Exception:
+                continue
+    except Exception:
+        normalized_completed = []
+
     return templates.TemplateResponse(
         request,
         'enigme.html',
@@ -222,6 +238,7 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
             'enigmes': ENIGMES,
             'error': error == 'wrong',
             'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
+            'completed': normalized_completed,
         }
     )
 
@@ -279,18 +296,46 @@ def discussion_message(
 
 
 @app.post('/enigme/{enigma_id}/submit')
-def submit_answer(enigma_id: int, response: str = Form(...)):
+def submit_answer(request: Request, enigma_id: int, response: str = Form(...)):
     try:
         enigma = get_enigma(enigma_id)
     except ValueError:
         return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
-
     if is_correct_answer(response, enigma['accepted_answers']):
+        # update progress cookie
+        progress_cookie = request.cookies.get('progress', '[]')
+        try:
+            completed = json.loads(progress_cookie)
+            if not isinstance(completed, list):
+                completed = []
+        except Exception:
+            completed = []
+
+        try:
+            if enigma_id not in completed:
+                completed.append(enigma_id)
+        except Exception:
+            pass
+
+        cookie_value = json.dumps(completed)
+
         if enigma_id == 3:
-            return RedirectResponse(url='/interlude/discussion?completed=3', status_code=status.HTTP_302_FOUND)
+            resp = RedirectResponse(url='/interlude/discussion?completed=3', status_code=status.HTTP_302_FOUND)
+            resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
+            return resp
 
         next_id = enigma_id + 1 if enigma_id < len(ENIGMES) else None
         target = f'/enigme/{next_id}?completed={enigma_id}' if next_id else f'/enigme/{enigma_id}?completed={enigma_id}'
-        return RedirectResponse(url=target, status_code=status.HTTP_302_FOUND)
+        resp = RedirectResponse(url=target, status_code=status.HTTP_302_FOUND)
+        resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
+        return resp
 
     return RedirectResponse(url=f'/enigme/{enigma_id}?error=wrong', status_code=status.HTTP_302_FOUND)
+
+
+@app.post('/progress/reset')
+def reset_progress(request: Request):
+    referer = request.headers.get('referer', '/')
+    resp = RedirectResponse(url=referer, status_code=status.HTTP_302_FOUND)
+    resp.delete_cookie('progress')
+    return resp
