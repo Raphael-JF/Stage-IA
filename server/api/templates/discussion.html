@@ -19,20 +19,29 @@
                 </div>
             </div>
             <div class="discussion">
+                <form method="post" action="/progress/reset"
+                    onsubmit="return confirm('Réinitialiser la progression ?');" style="margin:8px 0">
+                    <button type="submit" class="reset-btn">Réinitialiser la progression</button>
+                </form>
                 <nav class="sidebar-nav">
                     <ol class="step-list">
                         {% for item in enigmes %}
-                        <li class="step-item {% if item.id <= current_enigma_id %}past{% else %}future{% endif %}">
-                            {% if item.id <= current_enigma_id %} <a href="/enigme/{{ item.id }}">
+                        {% set is_current = (item.id == current_enigma_id) %}
+                        {% set is_visited = item.id in visited %}
+                        {% set is_completed = item.id in completed %}
+                        <li
+                            class="step-item {% if is_current %}current{% elif is_visited or is_completed %}past{% else %}future{% endif %}">
+                            {% if is_current or is_visited or is_completed %}
+                            <a href="/enigme/{{ item.id }}">
                                 <span class="step-number">{{ item.id }}</span>
                                 <span class="step-label">{{ item.title }}</span>
-                                </a>
-                                {% else %}
-                                <span>
-                                    <span class="step-number">{{ item.id }}</span>
-                                    <span class="step-label">{{ item.title }}</span>
-                                </span>
-                                {% endif %}
+                            </a>
+                            {% else %}
+                            <span class="locked">
+                                <span class="step-number">{{ item.id }}</span>
+                                <span class="step-label">???</span>
+                            </span>
+                            {% endif %}
                         </li>
                         {% endfor %}
                         <li class="step-item current side-branch">
