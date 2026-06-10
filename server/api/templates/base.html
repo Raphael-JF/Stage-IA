@@ -19,10 +19,6 @@
                 </div>
             </div>
             <p class="sidebar-intro">{% block sidebar_intro %}{% endblock %}</p>
-            <form method="post" action="/progress/reset" onsubmit="return confirm('Réinitialiser la progression ?');"
-                class="sidebar-reset-form">
-                <button type="submit" class="reset-btn">Réinitialiser la progression</button>
-            </form>
             <nav class="sidebar-nav">
                 <ol class="step-list">
                     {% for item in enigmes %}
