@@ -390,11 +390,32 @@ button:hover {
     white-space: nowrap;
     /* 🔥 empêche les boutons de passer à la ligne */
 }
+.prompt-bar {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.8rem;
 
-/* boutons fixes */
-.temp-button,
-.send-button {
+    width: 100%;
+    min-width: 0;
+    /* important */
+}
+
+#discussion-message {
+    flex: 1 1 0;
+    /* 🔥 clé : 0 au lieu de auto */
+    min-width: 0;
+    /* 🔥 obligatoire */
+    width: 0;
+    /* 🔥 hack crucial pour éviter overflow flex */
+}
+
+.prompt-actions {
+    display: flex;
     flex: 0 0 auto;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
 }
 
 .prompt-bar:focus-within {
