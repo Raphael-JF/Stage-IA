@@ -13,7 +13,7 @@
 # Transition vers la disccussion avec l'IA
 4. Première interaction avec l'interface
     * les élèves posent des questions
-    * manipulation de la température, token
+    * manipulation la température, token
 
 5. Trouver l'humain : plusieurs réponses à une question sont anonymisées dont certaines sont données par une IA et d'autres sont données par les élèves, l'objectif est que les deux binômes se retrouvent
     * première interaction avec un LLM

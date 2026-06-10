@@ -28,9 +28,63 @@
 {% endfor %}
 
 <form class="answer-form" method="post" action="/enigme/{{ current.id }}/submit">
+    <section class="puzzle-card">
+        <p class="puzzle-kicker">Section énigme</p>
+        <h2 class="puzzle-heading">{{ current.title }}</h2>
+        {% if current.puzzle_intro %}
+        <p class="puzzle-intro">{{ current.puzzle_intro }}</p>
+        {% endif %}
+
+        {% if current.puzzle_type == 'icons' %}
+        <div class="puzzle-grid icon-grid">
+            {% for icon, value in current.icon_options %}
+            <label class="choice-card icon-card">
+                <input type="checkbox" name="selected_icons" value="{{ value }}">
+                <span class="choice-icon">{{ icon }}</span>
+                <span class="choice-label">{{ value }}</span>
+            </label>
+            {% endfor %}
+        </div>
+        {% elif current.puzzle_type == 'graph' %}
+        <figure class="puzzle-figure">
+            <img src="{{ current.graph_image }}" alt="{{ current.graph_alt }}">
+            <figcaption>{{ current.graph_caption }}</figcaption>
+        </figure>
+        {% elif current.puzzle_type == 'blanks' %}
+        <div class="puzzle-fillin">
+            <p>{{ current.fill_in_text }}</p>
+        </div>
+        {% elif current.puzzle_type == 'ascii' %}
+        <pre class="ascii-art">{{ current.ascii_art }}</pre>
+        <div class="ascii-actions">
+            {% for symbol in current.ascii_symbols %}
+            <a class="ascii-symbol" href="/enigme/{{ current.id + 1 }}">{{ symbol }}</a>
+            {% endfor %}
+        </div>
+        <p class="puzzle-note">Cliquez sur le symbole qui vous guide vers la suite.</p>
+        {% elif current.puzzle_type == 'mcq' %}
+        <div class="puzzle-grid choice-grid">
+            {% for label, value in current.choices %}
+            <label class="choice-card">
+                <input type="radio" name="choice" value="{{ value }}">
+                <span>{{ label }}</span>
+            </label>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
+    {% if current.puzzle_type == 'icons' %}
+    <p class="answer-note">Sélectionne plusieurs icônes puis valide pour ouvrir la serrure.</p>
+    <button type="submit">Valider les icônes</button>
+    {% elif current.puzzle_type == 'mcq' %}
+    <p class="answer-note">Choisis l’option puis valide.</p>
+    <button type="submit">Valider le QCM</button>
+    {% else %}
     <label class="answer-label" for="answer">Votre réponse</label>
     <input id="answer" name="response" type="text" autocomplete="off" placeholder="Entrez votre réponse ici" required>
     <button type="submit">Valider</button>
+    {% endif %}
 </form>
 
 {% if error %}

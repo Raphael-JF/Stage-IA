@@ -1,5 +1,7 @@
 import json
 import os
+import re
+import unicodedata
 from pathlib import Path
 from typing import Optional
 from urllib import error, request as urllib_request
@@ -18,9 +20,9 @@ app.mount('/static', StaticFiles(directory=str(base_dir / 'static')), name='stat
 VLLM_NEMO_BASE_URL = os.getenv('VLLM_NEMO_BASE_URL', 'http://localhost:8001/v1')
 VLLM_NEMO_MODEL = os.getenv('VLLM_NEMO_MODEL', 'mistral-nemo')
 DISCUSSION_UNLOCKS_ENIGMA_ID = 4
-DEFAULT_DISCUSSION_TEMPERATURE = 0.7
+DEFAULT_DISCUSSION_TEMPERATURE = 0.5
 MIN_DISCUSSION_TEMPERATURE = 0.0
-MAX_DISCUSSION_TEMPERATURE = 1.5
+MAX_DISCUSSION_TEMPERATURE = 1.0
 
 ENIGMES = [
     {
@@ -31,8 +33,16 @@ ENIGMES = [
             "À côté de la porte, une serrure à code à 4 chiffres brille faiblement dans la pénombre.",
             "Une note est glissée entre deux planches. La clé de votre liberté se cache dans ce code."
         ],
+        'puzzle_type': 'icons',
+        'puzzle_intro': 'Choisis les trois icônes qui ouvrent la porte.',
+        'icon_options': [
+            ('🗝️', 'clef'),
+            ('🕯️', 'lanterne'),
+            ('📜', 'parchemin'),
+            ('🧩', 'puzzle'),
+        ],
         'hint': 'Le code est basé sur les symboles manquants dans la suite gravée.',
-        'accepted_answers': ['8602']
+        'accepted_answers': ['clef', 'lanterne', 'parchemin']
     },
     {
         'id': 2,
@@ -42,6 +52,11 @@ ENIGMES = [
             "Comprendre le lien entre les mots vous permettra de continuer votre route.",
             "Seul le mot juste ouvrira la porte vers la suite de l’aventure."
         ],
+        'puzzle_type': 'graph',
+        'puzzle_intro': 'Le graphique ci-dessous révèle la logique de la carte.',
+        'graph_image': '/static/graphs/enigma_2.png',
+        'graph_alt': 'Graphique illustrant les liens entre les mots de la carte.',
+        'graph_caption': 'Les hauteurs représentent l’importance de chaque piste.',
         'hint': 'Cherche un mot qui décrit la logique de cette carte.',
         'accepted_answers': ['lexique', 'carte', 'carte lexicale']
     },
@@ -52,6 +67,7 @@ ENIGMES = [
             "Otto a besoin de vous pour refaire fonctionner son lecteur de musique.",
             "Trouvez le mot de passe de son lecteur et peut-être vous laissera-t-il passer.",
         ],
+        'puzzle_type': 'text',
         'hint': 'Le mot est lié à l’objet et au capitaine.',
         'accepted_answers': ['ancre', 'capitaine']
     },
@@ -63,6 +79,7 @@ ENIGMES = [
             "Pour réussir, il faut montrer que vous êtes bien un humain et non une machine.",
             "Réponds avec clarté pour prouver ton intelligence."
         ],
+        'puzzle_type': 'text',
         'hint': 'Le mot attendu prouve que tu es humain.',
         'accepted_answers': ['humain', 'je suis humain']
     },
@@ -74,6 +91,9 @@ ENIGMES = [
             "Les blancs indiquent la direction du trésor et la salle secrète.",
             "Retourne la lettre dans ta tête et donne la bonne réponse."
         ],
+        'puzzle_type': 'blanks',
+        'puzzle_intro': 'Complète les trous pour retrouver le mot caché.',
+        'fill_in_text': 'Le trésor est sur la [direction] de la carte et le mot secret est [mot].',
         'hint': 'Un mot caché dans la lettre te mène à la carte.',
         'accepted_answers': ['carte', 'carte au trésor']
     },
@@ -85,9 +105,42 @@ ENIGMES = [
             "L'orientation du trésor est essentielle pour atteindre la salle secrète.",
             "Donne la direction correcte pour finir cette étape."
         ],
+        'puzzle_type': 'ascii',
+        'puzzle_intro': 'Clique sur le symbole qui ouvre la voie.',
+        'ascii_art': '   .-^.\n  /| |\\\n /_|_|_\\\n  [▲]  [◉]  [✦]\n',
+        'ascii_symbols': ['▲', '◉', '✦'],
         'hint': 'Le trésor est indiqué par une direction simple.',
         'accepted_answers': ['est']
-    }
+    },
+    {
+        'id': 7,
+        'title': 'Le Sceau des Étoiles',
+        'paragraphs': [
+            "Une lumière étrange traverse la salle et dessine des formes sur les murs.",
+            "Chaque forme correspond à une piste de la prochaine épreuve.",
+            "Le gardien attend votre réponse avant de vous laisser passer."
+        ],
+        'puzzle_type': 'text',
+        'hint': 'Concentre-toi sur la forme qui se répète.',
+        'accepted_answers': ['etoiles', 'étoiles']
+    },
+    {
+        'id': 8,
+        'title': 'Le Gardien des Choix',
+        'paragraphs': [
+            "Le Gardien vous propose une dernière question avant de vous remettre la clé.",
+            "Choisis la bonne réponse parmi les propositions ci-dessous."
+        ],
+        'puzzle_type': 'mcq',
+        'puzzle_intro': 'Choisis la bonne réponse au QCM.',
+        'choices': [
+            ('Le mot-clé est une image.', 'a'),
+            ('L’IA peut produire des réponses cohérentes à partir de motifs appris.', 'b'),
+            ('Le trésor est toujours en bas.', 'c'),
+        ],
+        'hint': 'Pense à la logique de l’IA qui apprend des motifs.',
+        'accepted_answers': ['b']
+    },
 ]
 
 
@@ -98,9 +151,60 @@ def get_enigma(enigma_id: int) -> dict:
     raise ValueError(f'Énigme introuvable: {enigma_id}')
 
 
+def normalize_answer(value: str) -> str:
+    normalized = unicodedata.normalize('NFKD', value or '')
+    normalized = normalized.encode('ascii', 'ignore').decode('ascii')
+    normalized = normalized.lower().strip()
+    return re.sub(r'[^a-z0-9]+', '', normalized)
+
+
 def is_correct_answer(response: str, accepted_answers: list[str]) -> bool:
-    normalized = response.strip().lower()
-    return any(normalized == answer.strip().lower() for answer in accepted_answers)
+    normalized = normalize_answer(response)
+    return any(normalized == normalize_answer(answer) for answer in accepted_answers)
+
+
+def evaluate_enigma_answer(enigma: dict, response: str = '', selected_icons: Optional[list[str]] = None,
+                           choice: str = '') -> bool:
+    puzzle_type = enigma.get('puzzle_type', 'text')
+
+    if puzzle_type == 'icons':
+        selected = [normalize_answer(item) for item in (selected_icons or [])]
+        expected = [normalize_answer(item) for item in (enigma.get('accepted_answers') or [])]
+        return bool(selected) and all(item in selected for item in expected)
+
+    if puzzle_type == 'mcq':
+        answer = choice or response
+        return is_correct_answer(answer, enigma.get('accepted_answers', []))
+
+    return is_correct_answer(response, enigma.get('accepted_answers', []))
+
+
+def ensure_graph_asset() -> str:
+    graph_dir = base_dir / 'static' / 'graphs'
+    graph_dir.mkdir(exist_ok=True)
+    image_path = graph_dir / 'enigma_2.png'
+
+    if image_path.exists():
+        return '/static/graphs/enigma_2.png'
+
+    try:
+        import matplotlib
+        matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
+    except Exception:
+        return '/static/graphs/placeholder.png'
+
+    fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
+    labels = ['Lexique', 'Mot', 'Carte', 'Piste']
+    values = [5, 7, 6, 8]
+    ax.bar(labels, values, color=['#d6b060', '#9c6a21', '#f1d79b', '#7f5d33'])
+    ax.set_title('Répartition des indices')
+    ax.set_ylabel('Force du lien')
+    ax.grid(axis='y', linestyle='--', alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(image_path)
+    plt.close(fig)
+    return '/static/graphs/enigma_2.png'
 
 
 def normalize_history(raw_history: str) -> list[dict[str, str]]:
@@ -239,6 +343,10 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
     if enigma_id not in visited:
         visited.append(enigma_id)
 
+    if enigma['id'] == 2:
+        enigma = dict(enigma)
+        enigma['graph_image'] = ensure_graph_asset()
+
     cookie_value = json.dumps({'visited': visited, 'completed': completed})
 
     resp = templates.TemplateResponse(
@@ -365,12 +473,19 @@ def discussion_message(
 
 
 @app.post('/enigme/{enigma_id}/submit')
-def submit_answer(request: Request, enigma_id: int, response: str = Form(...)):
+def submit_answer(
+    request: Request,
+    enigma_id: int,
+    response: str = Form(default=''),
+    selected_icons: list[str] = Form(default=[]),
+    choice: str = Form(default=''),
+):
     try:
         enigma = get_enigma(enigma_id)
     except ValueError:
         return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
-    if is_correct_answer(response, enigma['accepted_answers']):
+
+    if evaluate_enigma_answer(enigma, response=response, selected_icons=selected_icons, choice=choice):
         # update progress cookie: keep visited and completed lists
         progress_cookie = request.cookies.get('progress', '')
         visited: list[int] = []
