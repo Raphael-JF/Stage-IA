@@ -83,13 +83,6 @@ function parseCompletedQuery() {
     return null;
 }
 
-function cleanUrl() {
-    const url = new URL(window.location.href);
-    if (url.searchParams.has('completed')) {
-        url.searchParams.delete('completed');
-        window.history.replaceState({}, '', url.pathname + url.search);
-    }
-}
 
 window.addEventListener('DOMContentLoaded', () => {
     // Merge server cookie progress into localStorage progress to keep state consistent

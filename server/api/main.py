@@ -315,9 +315,8 @@ def discussion_message(
         {
             'role': 'system',
             'content': (
-                "Tu es le Gardien des Echos dans une aventure pedagogique. "
+                "Tu es Otto, un vieux robot rouillé dans une aventure pedagogique sur les pirates. Ton capitaine est Barbe Noire, il te néglige et tu veux t'enfuir avec les deux marins qui te parlent pour trouver de la graisse."
                 "Tu reponds uniquement en francais, de facon concise et claire. "
-                "Tu aides l'eleve a raisonner sans donner directement la solution d'une enigme."
             ),
         },
         *chat_history,
@@ -399,12 +398,27 @@ def submit_answer(request: Request, enigma_id: int, response: str = Form(...)):
         cookie_value = json.dumps({'visited': visited, 'completed': completed})
 
         if enigma_id == 3:
-            resp = RedirectResponse(url='/interlude/discussion', status_code=status.HTTP_302_FOUND)
-            resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
-            return resp
+            if DISCUSSION_UNLOCKS_ENIGMA_ID not in visited:
+                visited.append(DISCUSSION_UNLOCKS_ENIGMA_ID)
 
+            cookie_value = json.dumps({
+                'visited': visited,
+                'completed': completed
+            })
+
+            resp = RedirectResponse(
+                url='/interlude/discussion',
+                status_code=status.HTTP_302_FOUND
+            )
+            resp.set_cookie(
+                'progress',
+                cookie_value,
+                httponly=True,
+                max_age=31536000
+            )
+            return resp
         next_id = enigma_id + 1 if enigma_id < len(ENIGMES) else None
-        target = f'/enigme/{next_id}?completed={enigma_id}' if next_id else f'/enigme/{enigma_id}?completed={enigma_id}'
+        target = f'/enigme/{next_id}' if next_id else f'/enigme/{enigma_id}'
         resp = RedirectResponse(url=target, status_code=status.HTTP_302_FOUND)
         resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
         return resp
