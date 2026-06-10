@@ -1,6 +1,25 @@
 const currentId = Number(document.body.dataset.currentEnigma || 0);
 const storageKey = 'enigme_progress_v1';
 
+function loadProgressFromCookie() {
+    try {
+        const cookie = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('progress='));
+        if (!cookie) return {};
+        const value = decodeURIComponent(cookie.split('=')[1] || '');
+        const parsed = JSON.parse(value || '[]');
+        const out = {};
+        if (Array.isArray(parsed)) {
+            parsed.forEach((id) => {
+                const n = Number(id);
+                if (Number.isInteger(n) && n > 0) out[n] = true;
+            });
+        }
+        return out;
+    } catch (err) {
+        return {};
+    }
+}
+
 function loadProgress() {
     try {
         const stored = localStorage.getItem(storageKey);
@@ -65,8 +84,12 @@ function cleanUrl() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    // Merge server cookie progress into localStorage progress to keep state consistent
     const progress = loadProgress();
-    updateSidebar(progress);
+    const serverProgress = loadProgressFromCookie();
+    const merged = Object.assign({}, progress, serverProgress);
+    saveProgress(merged);
+    updateSidebar(merged);
 
     const completedId = parseCompletedQuery();
     if (completedId) {
