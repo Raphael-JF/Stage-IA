@@ -6,10 +6,18 @@ function loadProgressFromCookie() {
         const cookie = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('progress='));
         if (!cookie) return {};
         const value = decodeURIComponent(cookie.split('=')[1] || '');
-        const parsed = JSON.parse(value || '[]');
+        const parsed = JSON.parse(value || '{}');
         const out = {};
+        // support legacy array (treated as completed) or new object {visited:[], completed:[]}
         if (Array.isArray(parsed)) {
             parsed.forEach((id) => {
+                const n = Number(id);
+                if (Number.isInteger(n) && n > 0) out[n] = true;
+            });
+        } else if (parsed && typeof parsed === 'object') {
+            const visited = Array.isArray(parsed.visited) ? parsed.visited : [];
+            const completed = Array.isArray(parsed.completed) ? parsed.completed : [];
+            visited.concat(completed).forEach((id) => {
                 const n = Number(id);
                 if (Number.isInteger(n) && n > 0) out[n] = true;
             });
@@ -97,7 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
         cleanUrl();
     }
 
-    if (currentId && progress[currentId]) {
+    if (currentId && merged[currentId]) {
         displayAlreadySolved();
     }
 

@@ -116,6 +116,12 @@ input {
     opacity: 0.55;
 }
 
+.step-item .locked .step-label,
+.step-item.future .step-label {
+    filter: blur(1.8px);
+    opacity: 0.55;
+}
+
 .step-item a,
 .step-item span {
     display: grid;

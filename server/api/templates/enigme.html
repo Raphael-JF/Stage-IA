@@ -26,17 +26,20 @@
             <nav class="sidebar-nav">
                 <ol class="step-list">
                     {% for item in enigmes %}
+                    {% set is_current = (item.id == current.id) %}
+                    {% set is_visited = item.id in visited %}
+                    {% set is_completed = item.id in completed %}
                     <li
-                        class="step-item {% if item.id == current.id %}current{% elif item.id in completed %}past{% else %}future{% endif %}">
-                        {% if item.id == current.id or item.id in completed %}
+                        class="step-item {% if is_current %}current{% elif is_visited or is_completed %}past{% else %}future{% endif %}">
+                        {% if is_current or is_visited or is_completed %}
                         <a href="/enigme/{{ item.id }}">
                             <span class="step-number">{{ item.id }}</span>
                             <span class="step-label">{{ item.title }}</span>
                         </a>
                         {% else %}
-                        <span>
+                        <span class="locked">
                             <span class="step-number">{{ item.id }}</span>
-                            <span class="step-label">{{ item.title }}</span>
+                            <span class="step-label">???</span>
                         </span>
                         {% endif %}
                     </li>
