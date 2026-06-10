@@ -399,7 +399,7 @@ def submit_answer(request: Request, enigma_id: int, response: str = Form(...)):
         cookie_value = json.dumps({'visited': visited, 'completed': completed})
 
         if enigma_id == 3:
-            resp = RedirectResponse(url='/interlude/discussion?completed=3', status_code=status.HTTP_302_FOUND)
+            resp = RedirectResponse(url='/interlude/discussion', status_code=status.HTTP_302_FOUND)
             resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
             return resp
 
