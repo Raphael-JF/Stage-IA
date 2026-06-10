@@ -94,4 +94,22 @@ window.addEventListener('DOMContentLoaded', () => {
         temperatureInput.addEventListener('input', updateTemperatureOutput);
         temperatureInput.addEventListener('change', updateTemperatureOutput);
     }
+
+    // Temperature menu toggle
+    const tempButton = document.getElementById('temp-button');
+    const tempMenu = document.getElementById('temp-menu');
+    
+    if (tempButton && tempMenu) {
+        tempButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            tempMenu.classList.toggle('hidden');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!tempButton.contains(e.target) && !tempMenu.contains(e.target)) {
+                tempMenu.classList.add('hidden');
+            }
+        });
+    }
 });
