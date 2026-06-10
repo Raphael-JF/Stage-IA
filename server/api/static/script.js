@@ -87,10 +87,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const temperatureValue = document.getElementById('temperature-value');
     if (temperatureInput && temperatureValue) {
         const updateTemperatureOutput = () => {
-            const value = Number(temperatureInput.value);
+            const value = parseFloat(temperatureInput.value);
             temperatureValue.textContent = value.toFixed(2);
         };
         updateTemperatureOutput();
         temperatureInput.addEventListener('input', updateTemperatureOutput);
+        temperatureInput.addEventListener('change', updateTemperatureOutput);
     }
 });

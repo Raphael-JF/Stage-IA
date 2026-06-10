@@ -349,33 +349,102 @@ button:hover {
     line-height: 1.6;
 }
 
-.temperature-control {
-    border: 1px solid rgba(212, 163, 75, 0.18);
-    border-radius: 14px;
-    padding: 0.9rem 0.95rem;
-    background: rgba(32, 21, 13, 0.65);
+.prompt-bar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.6rem;
+    align-items: center;
+    padding: 0.6rem;
+    background: rgba(25, 16, 9, 0.88);
+    border: 1px solid rgba(212, 163, 75, 0.2);
+    border-radius: 16px;
 }
 
-.temperature-head {
+#discussion-message {
+    grid-column: 1;
+    margin: 0 !important;
+    padding: 0.65rem 0.8rem !important;
+    border: none !important;
+    background: transparent !important;
+    outline: none !important;
+}
+
+#discussion-message::placeholder {
+    color: #9d8a6b;
+}
+
+.temperature-widget {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.65rem;
+    gap: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    background: rgba(212, 163, 75, 0.08);
+    border-radius: 10px;
+}
+
+.temp-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.temp-slider {
+    width: 80px;
+    height: 5px;
+    accent-color: #d7b45a;
+    cursor: pointer;
+    appearance: none;
+}
+
+.temp-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: #d7b45a;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+.temp-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: #d7b45a;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
 }
 
 #temperature-value {
-    min-width: 3rem;
-    text-align: right;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: #edd18f;
+    min-width: 28px;
+    text-align: center;
+    flex-shrink: 0;
 }
 
-input[type="range"] {
-    width: 100%;
-    accent-color: #d7b45a;
+.send-button {
+    padding: 0.6rem 0.8rem !important;
+    margin: 0 !important;
+    font-size: 1.1rem !important;
+    border-radius: 10px !important;
+}
+
+button {
+    border: none;
+    border-radius: 16px;
+    padding: 1rem 1.4rem;
+    background: linear-gradient(135deg, #c59d4d, #d7b35c);
+    color: #1a1208;
+    font-weight: 700;
     cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
 }
 
 .start-body {
