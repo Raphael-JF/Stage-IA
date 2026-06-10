@@ -350,23 +350,26 @@ button:hover {
 }
 
 .prompt-bar {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.6rem;
+    display: flex;
     align-items: center;
+    gap: 0.6rem;
     padding: 0.6rem;
     background: rgba(25, 16, 9, 0.88);
     border: 1px solid rgba(212, 163, 75, 0.2);
     border-radius: 16px;
+    width: 100%;
 }
 
 #discussion-message {
-    grid-column: 1;
+    flex: 1;
+    min-width: 0;
     margin: 0 !important;
     padding: 0.65rem 0.8rem !important;
     border: none !important;
     background: transparent !important;
     outline: none !important;
+    font-size: inherit;
+    color: inherit;
 }
 
 #discussion-message::placeholder {
