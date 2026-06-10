@@ -18,6 +18,9 @@ app.mount('/static', StaticFiles(directory=str(base_dir / 'static')), name='stat
 VLLM_NEMO_BASE_URL = os.getenv('VLLM_NEMO_BASE_URL', 'http://localhost:8001/v1')
 VLLM_NEMO_MODEL = os.getenv('VLLM_NEMO_MODEL', 'mistral-nemo')
 DISCUSSION_UNLOCKS_ENIGMA_ID = 4
+DEFAULT_DISCUSSION_TEMPERATURE = 0.7
+MIN_DISCUSSION_TEMPERATURE = 0.0
+MAX_DISCUSSION_TEMPERATURE = 1.5
 
 ENIGMES = [
     {
@@ -130,12 +133,25 @@ def normalize_history(raw_history: str) -> list[dict[str, str]]:
     return history
 
 
-def ask_nemo(messages: list[dict[str, str]]) -> str:
+def parse_temperature(raw_value: str) -> float:
+    try:
+        value = float(raw_value)
+    except (TypeError, ValueError):
+        return DEFAULT_DISCUSSION_TEMPERATURE
+
+    if value < MIN_DISCUSSION_TEMPERATURE:
+        return MIN_DISCUSSION_TEMPERATURE
+    if value > MAX_DISCUSSION_TEMPERATURE:
+        return MAX_DISCUSSION_TEMPERATURE
+    return value
+
+
+def ask_nemo(messages: list[dict[str, str]], temperature: float) -> str:
     url = f"{VLLM_NEMO_BASE_URL.rstrip('/')}/chat/completions"
     payload = {
         'model': VLLM_NEMO_MODEL,
         'messages': messages,
-        'temperature': 0.7,
+        'temperature': temperature,
         'max_tokens': 500,
     }
     req = urllib_request.Request(
@@ -168,7 +184,11 @@ def ask_nemo(messages: list[dict[str, str]]) -> str:
     return content.strip()
 
 
-def render_discussion_page(request: Request, chat_history: list[dict[str, str]]):
+def render_discussion_page(
+    request: Request,
+    chat_history: list[dict[str, str]],
+    discussion_temperature: float = DEFAULT_DISCUSSION_TEMPERATURE,
+):
     return templates.TemplateResponse(
         request,
         'discussion.html',
@@ -177,6 +197,7 @@ def render_discussion_page(request: Request, chat_history: list[dict[str, str]])
             'enigmes': ENIGMES,
             'current_enigma_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
             'chat_history': chat_history,
+            'discussion_temperature': discussion_temperature,
         },
     )
 
@@ -208,7 +229,11 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
 
 @app.get('/interlude/discussion')
 def discussion_menu(request: Request):
-    return render_discussion_page(request, chat_history=[])
+    return render_discussion_page(
+        request,
+        chat_history=[],
+        discussion_temperature=DEFAULT_DISCUSSION_TEMPERATURE,
+    )
 
 
 @app.post('/interlude/discussion')
@@ -216,10 +241,16 @@ def discussion_message(
     request: Request,
     message: str = Form(...),
     history: str = Form(default='[]'),
+    temperature: str = Form(default=str(DEFAULT_DISCUSSION_TEMPERATURE)),
 ):
+    selected_temperature = parse_temperature(temperature)
     normalized_message = message.strip()
     if not normalized_message:
-        return render_discussion_page(request, chat_history=normalize_history(history))
+        return render_discussion_page(
+            request,
+            chat_history=normalize_history(history),
+            discussion_temperature=selected_temperature,
+        )
 
     chat_history = normalize_history(history)
     messages = [
@@ -234,14 +265,18 @@ def discussion_message(
         *chat_history,
         {'role': 'user', 'content': normalized_message[:2000]},
     ]
-    answer = ask_nemo(messages)
+    answer = ask_nemo(messages, temperature=selected_temperature)
 
     updated_history = [
         *chat_history,
         {'role': 'user', 'content': normalized_message},
         {'role': 'assistant', 'content': answer},
     ]
-    return render_discussion_page(request, chat_history=updated_history[-12:])
+    return render_discussion_page(
+        request,
+        chat_history=updated_history[-12:],
+        discussion_temperature=selected_temperature,
+    )
 
 
 @app.post('/enigme/{enigma_id}/submit')

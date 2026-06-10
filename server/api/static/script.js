@@ -77,4 +77,20 @@ window.addEventListener('DOMContentLoaded', () => {
     if (currentId && progress[currentId]) {
         displayAlreadySolved();
     }
+
+    const chatLog = document.getElementById('chat-log');
+    if (chatLog) {
+        chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    const temperatureInput = document.getElementById('temperature');
+    const temperatureValue = document.getElementById('temperature-value');
+    if (temperatureInput && temperatureValue) {
+        const updateTemperatureOutput = () => {
+            const value = Number(temperatureInput.value);
+            temperatureValue.textContent = value.toFixed(2);
+        };
+        updateTemperatureOutput();
+        temperatureInput.addEventListener('input', updateTemperatureOutput);
+    }
 });
