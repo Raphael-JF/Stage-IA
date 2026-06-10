@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Temperature menu toggle
     const tempButton = document.getElementById('temp-button');
     const tempMenu = document.getElementById('temp-menu');
-    
+
     if (tempButton && tempMenu) {
         tempButton.addEventListener('click', (e) => {
             e.preventDefault();

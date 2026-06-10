@@ -491,6 +491,12 @@ button:hover {
     text-align: center;
 }
 
+#temperature-value {
+    font-weight: 700;
+    color: #edd18f;
+    text-align: center;
+}
+
 .send-button {
     padding: 0.6rem 0.8rem !important;
     margin: 0 !important;
