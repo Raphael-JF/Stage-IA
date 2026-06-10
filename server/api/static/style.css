@@ -88,6 +88,10 @@ input {
     font-size: 0.95rem;
 }
 
+.sidebar-reset-form {
+    margin: 8px 0 1rem;
+}
+
 .step-list {
     list-style: none;
     padding: 0;
@@ -113,6 +117,12 @@ input {
 }
 
 .step-item.future {
+    opacity: 0.55;
+}
+
+.step-item .locked .step-label,
+.step-item.future .step-label {
+    filter: blur(1.8px);
     opacity: 0.55;
 }
 
@@ -183,6 +193,18 @@ h1 {
     font-size: 0.95rem;
     font-weight: 600;
     align-self: center;
+}
+
+button.panel-link {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+.panel-reset-form {
+    margin: 0;
 }
 
 .paragraph {

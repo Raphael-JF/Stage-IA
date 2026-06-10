@@ -194,9 +194,12 @@ def render_discussion_page(
         {
             'request': request,
             'enigmes': ENIGMES,
+            'active_step_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
             'current_enigma_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
             'chat_history': chat_history,
             'discussion_temperature': discussion_temperature,
+            'visited': [],
+            'completed': [],
         },
     )
 
@@ -212,44 +215,83 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
         enigma = get_enigma(enigma_id)
     except ValueError:
         return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
-
-    # read completed enigma ids from cookie
-    progress_cookie = request.cookies.get('progress', '[]')
+    # read progress cookie (supports legacy array or new object)
+    progress_cookie = request.cookies.get('progress', '')
+    visited: list[int] = []
+    completed: list[int] = []
     try:
-        completed = json.loads(progress_cookie)
-        if not isinstance(completed, list):
-            completed = []
-        # normalize to ints
-        normalized_completed: list[int] = []
-        for v in completed:
-            try:
-                normalized_completed.append(int(v))
-            except Exception:
-                continue
+        parsed = json.loads(progress_cookie) if progress_cookie else {}
+        if isinstance(parsed, list):
+            # legacy: array of completed ids
+            completed = [int(v) for v in parsed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+        elif isinstance(parsed, dict):
+            raw_visited = parsed.get('visited', [])
+            raw_completed = parsed.get('completed', [])
+            if isinstance(raw_visited, list):
+                visited = [int(v) for v in raw_visited if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+            if isinstance(raw_completed, list):
+                completed = [int(v) for v in raw_completed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
     except Exception:
-        normalized_completed = []
+        visited = []
+        completed = []
 
-    return templates.TemplateResponse(
+    # mark current page as visited
+    if enigma_id not in visited:
+        visited.append(enigma_id)
+
+    cookie_value = json.dumps({'visited': visited, 'completed': completed})
+
+    resp = templates.TemplateResponse(
         request,
         'enigme.html',
         {
             'request': request,
             'current': enigma,
             'enigmes': ENIGMES,
+            'active_step_id': enigma['id'],
             'error': error == 'wrong',
             'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
-            'completed': normalized_completed,
+            'visited': visited,
+            'completed': completed,
         }
     )
+    resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
+    return resp
 
 
 @app.get('/interlude/discussion')
 def discussion_menu(request: Request):
-    return render_discussion_page(
+    # read progress cookie and mark discussion as visited
+    progress_cookie = request.cookies.get('progress', '')
+    visited: list[int] = []
+    completed: list[int] = []
+    try:
+        parsed = json.loads(progress_cookie) if progress_cookie else {}
+        if isinstance(parsed, list):
+            completed = [int(v) for v in parsed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+        elif isinstance(parsed, dict):
+            raw_visited = parsed.get('visited', [])
+            raw_completed = parsed.get('completed', [])
+            if isinstance(raw_visited, list):
+                visited = [int(v) for v in raw_visited if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+            if isinstance(raw_completed, list):
+                completed = [int(v) for v in raw_completed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+    except Exception:
+        visited = []
+        completed = []
+
+    if DISCUSSION_UNLOCKS_ENIGMA_ID not in visited:
+        visited.append(DISCUSSION_UNLOCKS_ENIGMA_ID)
+
+    cookie_value = json.dumps({'visited': visited, 'completed': completed})
+
+    resp = render_discussion_page(
         request,
         chat_history=[],
         discussion_temperature=DEFAULT_DISCUSSION_TEMPERATURE,
     )
+    resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
+    return resp
 
 
 @app.post('/interlude/discussion')
@@ -288,11 +330,38 @@ def discussion_message(
         {'role': 'user', 'content': normalized_message},
         {'role': 'assistant', 'content': answer},
     ]
-    return render_discussion_page(
+
+    # also mark discussion as visited in cookie
+    progress_cookie = request.cookies.get('progress', '')
+    visited: list[int] = []
+    completed: list[int] = []
+    try:
+        parsed = json.loads(progress_cookie) if progress_cookie else {}
+        if isinstance(parsed, list):
+            completed = [int(v) for v in parsed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+        elif isinstance(parsed, dict):
+            raw_visited = parsed.get('visited', [])
+            raw_completed = parsed.get('completed', [])
+            if isinstance(raw_visited, list):
+                visited = [int(v) for v in raw_visited if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+            if isinstance(raw_completed, list):
+                completed = [int(v) for v in raw_completed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+    except Exception:
+        visited = []
+        completed = []
+
+    if DISCUSSION_UNLOCKS_ENIGMA_ID not in visited:
+        visited.append(DISCUSSION_UNLOCKS_ENIGMA_ID)
+
+    cookie_value = json.dumps({'visited': visited, 'completed': completed})
+
+    resp = render_discussion_page(
         request,
         chat_history=updated_history[-12:],
         discussion_temperature=selected_temperature,
     )
+    resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
+    return resp
 
 
 @app.post('/enigme/{enigma_id}/submit')
@@ -302,13 +371,23 @@ def submit_answer(request: Request, enigma_id: int, response: str = Form(...)):
     except ValueError:
         return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
     if is_correct_answer(response, enigma['accepted_answers']):
-        # update progress cookie
-        progress_cookie = request.cookies.get('progress', '[]')
+        # update progress cookie: keep visited and completed lists
+        progress_cookie = request.cookies.get('progress', '')
+        visited: list[int] = []
+        completed: list[int] = []
         try:
-            completed = json.loads(progress_cookie)
-            if not isinstance(completed, list):
-                completed = []
+            parsed = json.loads(progress_cookie) if progress_cookie else {}
+            if isinstance(parsed, list):
+                completed = [int(v) for v in parsed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+            elif isinstance(parsed, dict):
+                raw_visited = parsed.get('visited', [])
+                raw_completed = parsed.get('completed', [])
+                if isinstance(raw_visited, list):
+                    visited = [int(v) for v in raw_visited if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
+                if isinstance(raw_completed, list):
+                    completed = [int(v) for v in raw_completed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
         except Exception:
+            visited = []
             completed = []
 
         try:
@@ -317,7 +396,7 @@ def submit_answer(request: Request, enigma_id: int, response: str = Form(...)):
         except Exception:
             pass
 
-        cookie_value = json.dumps(completed)
+        cookie_value = json.dumps({'visited': visited, 'completed': completed})
 
         if enigma_id == 3:
             resp = RedirectResponse(url='/interlude/discussion?completed=3', status_code=status.HTTP_302_FOUND)
@@ -335,7 +414,6 @@ def submit_answer(request: Request, enigma_id: int, response: str = Form(...)):
 
 @app.post('/progress/reset')
 def reset_progress(request: Request):
-    referer = request.headers.get('referer', '/')
-    resp = RedirectResponse(url=referer, status_code=status.HTTP_302_FOUND)
+    resp = RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
     resp.delete_cookie('progress')
     return resp
