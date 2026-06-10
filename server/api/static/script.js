@@ -35,10 +35,12 @@ function updateSidebar(progress) {
 function displayAlreadySolved() {
     const panel = document.querySelector('.panel');
     if (!panel) return;
+    const answerForm = panel.querySelector('.answer-form');
+    if (!answerForm) return;
     const alert = document.createElement('div');
     alert.className = 'message message-hint';
     alert.textContent = 'Cette énigme est déjà résolue dans votre progression locale. Vous pouvez revenir sur une ancienne énigme pour la relire.';
-    panel.insertBefore(alert, panel.querySelector('.answer-form'));
+    panel.insertBefore(alert, answerForm);
 }
 
 function parseCompletedQuery() {

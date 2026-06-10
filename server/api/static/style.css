@@ -108,6 +108,10 @@ input {
     background: rgba(215, 180, 96, 0.12);
 }
 
+.step-item.side-branch {
+    border-style: dashed;
+}
+
 .step-item.future {
     opacity: 0.55;
 }
@@ -250,6 +254,50 @@ button:hover {
     background: rgba(148, 118, 57, 0.12);
     border: 1px solid rgba(212, 163, 75, 0.2);
     color: #e8d6a5;
+}
+
+.chat-shell {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.chat-log {
+    display: grid;
+    gap: 0.9rem;
+    max-height: 45vh;
+    overflow-y: auto;
+    padding-right: 0.35rem;
+}
+
+.chat-item {
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(212, 163, 75, 0.16);
+    background: rgba(44, 30, 18, 0.72);
+}
+
+.chat-user {
+    background: rgba(78, 52, 30, 0.7);
+}
+
+.chat-assistant {
+    background: rgba(35, 25, 16, 0.88);
+}
+
+.chat-role {
+    margin: 0 0 0.4rem;
+    color: #d7b86f;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+    font-weight: 700;
+}
+
+.chat-content {
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: 1.6;
 }
 
 .start-body {

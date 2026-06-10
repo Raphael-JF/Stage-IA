@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interlude - Discussion avec le Gardien</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body data-current-enigma="{{ current_enigma_id }}">
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-mark">⚓</span>
+                <div>
+                    <p class="brand-title">Malediction du Savoir</p>
+                    <p class="brand-subtitle">Menu discussion</p>
+                </div>
+            </div>
+            <p class="sidebar-intro">Parlez au Gardien avant d'entrer dans la Chambre des Echos. Le sommaire reste accessible pour continuer l'histoire.</p>
+            <nav class="sidebar-nav">
+                <ol class="step-list">
+                    {% for item in enigmes %}
+                    <li class="step-item {% if item.id <= current_enigma_id %}past{% else %}future{% endif %}">
+                        {% if item.id <= current_enigma_id %}
+                        <a href="/enigme/{{ item.id }}">
+                            <span class="step-number">{{ item.id }}</span>
+                            <span class="step-label">{{ item.title }}</span>
+                        </a>
+                        {% else %}
+                        <span>
+                            <span class="step-number">{{ item.id }}</span>
+                            <span class="step-label">{{ item.title }}</span>
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                    <li class="step-item current side-branch">
+                        <a href="/interlude/discussion">
+                            <span class="step-number">✦</span>
+                            <span class="step-label">Interlude: discussion avec le Gardien</span>
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <span class="panel-badge">Interlude</span>
+                        <h1>Parler au Gardien des Echos</h1>
+                    </div>
+                    <a class="panel-link" href="/enigme/{{ current_enigma_id }}">Aller a l'enigme {{ current_enigma_id }}</a>
+                </div>
+
+                <p class="paragraph">Cette salle est un sas de discussion: posez des questions, demandez des indices progressifs, puis cliquez sur l'enigme suivante quand vous etes pret.</p>
+
+                <div class="chat-shell">
+                    <div class="chat-log">
+                        {% if chat_history %}
+                            {% for entry in chat_history %}
+                            <article class="chat-item chat-{{ entry.role }}">
+                                <p class="chat-role">{% if entry.role == 'user' %}Vous{% else %}Gardien{% endif %}</p>
+                                <p class="chat-content">{{ entry.content }}</p>
+                            </article>
+                            {% endfor %}
+                        {% else %}
+                        <div class="message message-hint">Commencez la discussion: le Gardien vous aide a raisonner sans devoiler directement la solution.</div>
+                        {% endif %}
+                    </div>
+
+                    <form class="answer-form" method="post" action="/interlude/discussion">
+                        <input type="hidden" name="history" value='{{ chat_history|tojson }}'>
+                        <label class="answer-label" for="discussion-message">Votre message</label>
+                        <input id="discussion-message" name="message" type="text" autocomplete="off" placeholder="Ex: Je bloque, peux-tu me guider sans donner la reponse ?" required>
+                        <button type="submit">Envoyer</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
