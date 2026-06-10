@@ -2,7 +2,7 @@
 Un n-gramme est une séquence contiguë de n éléments tirée d'un texte. Ces éléments peuvent être des lettres, des mots, ou tout autres symboles. 
 
 ## Objectif
-Compléter la suite incomplète pour trouver un code à 4 chiffres.
+Compléter la suite incomplète. 
 
 ### Suites connues
 * 🦜 🏴‍☠️ ⛵ 🌊
@@ -12,16 +12,11 @@ Compléter la suite incomplète pour trouver un code à 4 chiffres.
 * 🌊 🦜 🏴‍☠️ 🔫 🪙 ⛵
 * 🧭 🧜‍♀️ 🔫 🦜 ⚓
 
-### Etape 1 : suite à compléter
+### Suite à compléter
 * 🦜 🏴‍☠️ 🗡️
 
-### Etape 2 : tableau pour trouver le code
-| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| 🦜 | 🏴‍☠️ | ⚓ | ⛵ | 🧜‍♀️ | 🌊 | 🔫 | 🗡️ | 🪙 | 🧭 |
-
 ## Lien avec l'IA
-Les premiers modèles d'IA ne font que de compléter une phrase. Ainsi, elle s'entraîne sur une base de donnée et suggère la complétion en fonction et cherchant la logique. Comme ce que nous avons fais pour l'enigme, il regarde ce qui revient le plus souvent.
+Les premiers modèles d'IA ne font que de deviner la suite d'une phrase. Comme ce que nous avons fais pour l'enigme, l'IA regarde ce qui revient le plus souvent selon une base d'entraînement. 
 
 * Stratégie pour N = 1: on regarde le dernier symbole
 * Stratégie pour N = 2: on regarde le couple de symboles qui précèdent
@@ -57,13 +52,9 @@ Les premiers modèles d'IA ne font que de compléter une phrase. Ainsi, elle s'e
 6. La sirène pille le marin
 🧭 🧜‍♀️ 🔫 🦜 ⚓
 
-## La phrase complète
+## Réponse à l'enigme
 Le pirate attaque (et pille le marin). 
 🦜 🏴‍☠️ 🗡️ (🪙 🔫 🦜 ⚓)
-
-## Réponse à l'enigme
-Le code à quatre chiffres correspond à l'indice des symboles manquants dans le tableau.
-Code : 8602
 
 ## Indice
 Faire deviner le prochain mot d'une phrase pour donner l'intuition.
