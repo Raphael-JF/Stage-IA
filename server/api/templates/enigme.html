@@ -63,7 +63,10 @@
                         <span class="panel-badge">Énigme {{ current.id }}</span>
                         <h1>{{ current.title }}</h1>
                     </div>
-                    <a class="panel-link" href="/">Accueil</a>
+                    <form method="post" action="/progress/reset"
+                        onsubmit="return confirm('Réinitialiser la progression ?');" class="panel-reset-form">
+                        <button type="submit" class="panel-link">Réinitialiser la progression</button>
+                    </form>
                 </div>
 
                 {% for paragraph in current.paragraphs %}

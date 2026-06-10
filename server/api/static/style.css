@@ -191,6 +191,18 @@ h1 {
     align-self: center;
 }
 
+button.panel-link {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+.panel-reset-form {
+    margin: 0;
+}
+
 .paragraph {
     margin: 0 0 1.4rem;
     line-height: 1.85;
