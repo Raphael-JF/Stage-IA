@@ -47,11 +47,10 @@ ENIGMES = [
     },
     {
         'id': 3,
-        'title': 'Le Cadenas de l’Ancre',
+        'title': 'La clef du son',
         'paragraphs': [
-            "Une lourde ancre bloque l’accès à la salle suivante.",
-            "Un cadenas pirate garde le secret du capitaine.",
-            "Trouve le mot qui déverrouille l’énigme et franchis le passage."
+            "Otto a besoin de vous pour refaire fonctionner son lecteur de musique.",
+            "Trouvez le mot de passe de son lecteur et peut-être vous laissera-t-il passer.",
         ],
         'hint': 'Le mot est lié à l’objet et au capitaine.',
         'accepted_answers': ['ancre', 'capitaine']
@@ -83,7 +82,7 @@ ENIGMES = [
         'title': 'La Carte au Trésor',
         'paragraphs': [
             "La carte dévoile un réseau de flèches et de chemins.",
-            "L’orientation du trésor est essentielle pour atteindre la salle secrète.",
+            "L'orientation du trésor est essentielle pour atteindre la salle secrète.",
             "Donne la direction correcte pour finir cette étape."
         ],
         'hint': 'Le trésor est indiqué par une direction simple.',

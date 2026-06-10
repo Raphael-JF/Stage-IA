@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interlude - Discussion avec le Gardien</title>
+    <title>Interlude - Discussion avec Otto</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -18,32 +18,31 @@
                     <p class="brand-subtitle">Menu discussion</p>
                 </div>
             </div>
-            <p class="sidebar-intro">Otto vous escorte jusqu'a la brume de la Chambre des Echos. Echangez avec le
-                Gardien, puis utilisez le sommaire pour franchir la prochaine etape quand vous etes pret.</p>
-            <nav class="sidebar-nav">
-                <ol class="step-list">
-                    {% for item in enigmes %}
-                    <li class="step-item {% if item.id <= current_enigma_id %}past{% else %}future{% endif %}">
-                        {% if item.id <= current_enigma_id %} <a href="/enigme/{{ item.id }}">
-                            <span class="step-number">{{ item.id }}</span>
-                            <span class="step-label">{{ item.title }}</span>
-                            </a>
-                            {% else %}
-                            <span>
+            <div class="discussion">
+                <nav class="sidebar-nav">
+                    <ol class="step-list">
+                        {% for item in enigmes %}
+                        <li class="step-item {% if item.id <= current_enigma_id %}past{% else %}future{% endif %}">
+                            {% if item.id <= current_enigma_id %} <a href="/enigme/{{ item.id }}">
                                 <span class="step-number">{{ item.id }}</span>
                                 <span class="step-label">{{ item.title }}</span>
-                            </span>
-                            {% endif %}
-                    </li>
-                    {% endfor %}
-                    <li class="step-item current side-branch">
-                        <a href="/interlude/discussion">
-                            <span class="step-number">✦</span>
-                            <span class="step-label">Interlude: discussion avec le Gardien</span>
-                        </a>
-                    </li>
-                </ol>
-            </nav>
+                                </a>
+                                {% else %}
+                                <span>
+                                    <span class="step-number">{{ item.id }}</span>
+                                    <span class="step-label">{{ item.title }}</span>
+                                </span>
+                                {% endif %}
+                        </li>
+                        {% endfor %}
+                        <li class="step-item current side-branch">
+                            <a href="/interlude/discussion">
+                                <span class="step-number">✦</span>
+                                <span class="step-label">Interlude: discussion avec Otto</span>
+                            </a>
+                        </li>
+                    </ol>
+                </nav>
         </aside>
 
         <main class="content">
@@ -51,15 +50,11 @@
                 <div class="panel-head">
                     <div>
                         <span class="panel-badge">Interlude</span>
-                        <h1>Parler au Gardien des Echos</h1>
+                        <h1>Parler à Otto</h1>
                     </div>
-                    <a class="panel-link" href="/enigme/{{ current_enigma_id }}">Aller a l'enigme {{ current_enigma_id
-                        }}</a>
                 </div>
 
-                <p class="paragraph">Apres la chute dans les profondeurs, le Gardien des Echos vous observe dans la
-                    brume. Vous pouvez discuter librement pour clarifier vos idees, demander un guidage progressif, puis
-                    ouvrir la Chambre des Echos depuis le sommaire.</p>
+                <p class="paragraph">Vous pouvez discuter librement à Otto.</p>
 
                 <div class="chat-shell">
                     <div class="chat-bubble">
@@ -67,12 +62,14 @@
                             {% if chat_history %}
                             {% for entry in chat_history %}
                             <article class="chat-item chat-{{ entry.role }}">
-                                <p class="chat-role">{% if entry.role == 'user' %}Vous{% else %}Gardien{% endif %}</p>
+                                <p class="chat-role" data-speaker="{{ entry.role }}">{% if entry.role == 'user' %}<span
+                                        class="speaker-icon">💬</span>Vous{% else %}<span
+                                        class="speaker-icon">⚙️</span>Otto{% endif %}</p>
                                 <p class="chat-content">{{ entry.content }}</p>
                             </article>
                             {% endfor %}
                             {% else %}
-                            <div class="message message-hint">Commencez la discussion: le Gardien vous aide a raisonner
+                            <div class="message message-hint">Commencez la discussion: Otto vous aide a raisonner
                                 sans devoiler directement la solution.</div>
                             {% endif %}
                         </div>
@@ -82,7 +79,7 @@
                         <input type="hidden" name="history" value='{{ chat_history|tojson }}'>
                         <div class="temperature-control">
                             <div class="temperature-head">
-                                <label class="answer-label" for="temperature">Temperature du Gardien</label>
+                                <label class="answer-label" for="temperature">Temperature du Otto</label>
                                 <output id="temperature-value">{{ '%.2f'|format(discussion_temperature) }}</output>
                             </div>
                             <input id="temperature" name="temperature" type="range" min="0" max="1.5" step="0.1"

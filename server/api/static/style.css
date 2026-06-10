@@ -312,12 +312,35 @@ button:hover {
 }
 
 .chat-role {
-    margin: 0 0 0.4rem;
-    color: #d7b86f;
+    margin: 0 0 0.5rem;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.08rem;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.speaker-icon {
+    font-size: 0.95rem;
+    display: inline-block;
+}
+
+.chat-user .chat-role {
+    color: #f0e68c;
+    background: rgba(180, 140, 60, 0.18);
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.chat-assistant .chat-role {
+    color: #c9a572;
+    background: rgba(99, 70, 40, 0.22);
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    width: fit-content;
 }
 
 .chat-content {
