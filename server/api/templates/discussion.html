@@ -81,15 +81,25 @@
                         <div class="prompt-bar">
                             <input id="discussion-message" name="message" type="text" autocomplete="off"
                                 placeholder="Ex: Je bloque, peux-tu me guider sans donner la reponse ?" required>
-                            <div class="temperature-widget">
-                                <span class="temp-icon" title="Température: contrôlez la créativité d'Otto">🌡️</span>
-                                <input id="temperature" class="temp-slider" name="temperature" type="range" min="0"
-                                    max="1.5" step="0.1" value="{{ discussion_temperature }}"
-                                    title="Basse = logique, Haute = créatif">
-                                <output id="temperature-value" class="temp-display">{{
-                                    '%.2f'|format(discussion_temperature) }}</output>
+                            <div class="prompt-actions">
+                                <button type="button" id="temp-button" class="temp-button"
+                                    title="Contrôler la créativité">🌡️</button>
+                                <div id="temp-menu" class="temp-menu hidden">
+                                    <div class="temp-menu-content">
+                                        <div class="temp-menu-header">Créativité d'Otto</div>
+                                        <input id="temperature" class="temp-slider" name="temperature" type="range"
+                                            min="0" max="1.5" step="0.1" value="{{ discussion_temperature }}"
+                                            title="Basse = logique, Haute = créatif">
+                                        <div class="temp-menu-footer">
+                                            <span class="temp-label">Logique</span>
+                                            <output id="temperature-value" class="temp-display">{{
+                                                '%.2f'|format(discussion_temperature) }}</output>
+                                            <span class="temp-label">Créatif</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="send-button">↳</button>
                             </div>
-                            <button type="submit" class="send-button">↳</button>
                         </div>
                     </form>
                 </div>
