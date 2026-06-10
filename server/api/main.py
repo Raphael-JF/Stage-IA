@@ -412,7 +412,6 @@ def submit_answer(request: Request, enigma_id: int, response: str = Form(...)):
 
 @app.post('/progress/reset')
 def reset_progress(request: Request):
-    referer = request.headers.get('referer', '/')
-    resp = RedirectResponse(url=referer, status_code=status.HTTP_302_FOUND)
+    resp = RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
     resp.delete_cookie('progress')
     return resp

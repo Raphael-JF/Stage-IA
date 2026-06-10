@@ -99,6 +99,12 @@ window.addEventListener('DOMContentLoaded', () => {
     saveProgress(merged);
     updateSidebar(merged);
 
+    document.querySelectorAll('form[action="/progress/reset"]').forEach((form) => {
+        form.addEventListener('submit', () => {
+            localStorage.removeItem(storageKey);
+        });
+    });
+
     const completedId = parseCompletedQuery();
     if (completedId) {
         markCompleted(completedId);
