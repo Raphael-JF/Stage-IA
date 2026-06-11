@@ -292,6 +292,7 @@ def render_discussion_page(
     chat_history: list[dict[str, str]],
     discussion_temperature: float = DEFAULT_DISCUSSION_TEMPERATURE,
 ):
+    visited, completed = get_progress_from_cookie(request)
     return templates.TemplateResponse(
         request,
         'discussion.html',
