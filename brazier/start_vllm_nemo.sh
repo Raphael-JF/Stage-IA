@@ -11,5 +11,5 @@ vllm serve /home/cbrazier/models/Mistral-Nemo-Instruct-2407 \
   --port 8001 \
   --dtype bfloat16 \
   --max-model-len 8192 \
-  --gpu-memory-utilization 0.80 \
+  --gpu-memory-utilization 0.70 \
   --tokenizer-mode mistral
