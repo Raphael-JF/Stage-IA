@@ -299,8 +299,6 @@ def render_discussion_page(
         {
             'request': request,
             'enigmes': ENIGMES,
-            'active_step_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
-            'current_enigma_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
             'chat_history': chat_history,
             'discussion_temperature': discussion_temperature,
             'visited': visited,
@@ -400,8 +398,7 @@ def discussion_message(
         {
             'role': 'system',
             'content': (
-                "Tu es Otto, un vieux robot rouillé dans une aventure pedagogique sur les pirates. Ton capitaine est Barbe Noire, il te néglige et tu veux t'enfuir avec les deux marins qui te parlent pour trouver de la graisse."
-                "Tu reponds uniquement en francais, de facon concise et claire. "
+                "Tu es Otto, un vieux robot rouillé dans une aventure pedagogique sur les pirates. Ton capitaine est Barbe Noire, il te néglige et tu veux t'enfuir avec les deux marins qui te parlent pour trouver de la graisse. Tu dois répondre à tout type de questions uniquement en français, de façon concise et claire."
             ),
         },
         *chat_history,
