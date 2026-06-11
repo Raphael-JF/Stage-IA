@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+git pull
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR/server"
 source venv/bin/activate
