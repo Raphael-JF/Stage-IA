@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block page_title %}Interlude - Discussion avec Otto{% endblock %}
+{% block page_title %}Parler à Otto{% endblock %}
 {% block body_attrs %}data-current-enigma="{{ current_enigma_id }}"{% endblock %}
 {% block brand_subtitle %}Menu discussion{% endblock %}
-{% block sidebar_intro %}Le sommaire reste accessible pendant votre échange avec Otto.{% endblock %}
+{% block sidebar_intro %}{% endblock %}
 {% block panel_badge %}Interlude{% endblock %}
 {% block panel_title %}Parler à Otto{% endblock %}
 {% block sidebar_extra_item %}
-<li class="step-item current side-branch">
+<li class="step-item current ">
     <a href="/interlude/discussion">
         <span class="step-number">✦</span>
-        <span class="step-label">Interlude: discussion avec Otto</span>
+        <span class="step-label">Parler à Otto</span>
     </a>
 </li>
 {% endblock %}
