@@ -312,21 +312,13 @@ def render_discussion_page(
 def landing(request: Request):
     return templates.TemplateResponse(request, 'index.html', {'request': request})
 
-
-@app.get('/enigme/{enigma_id}')
-def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
-    try:
-        enigma = get_enigma(enigma_id)
-    except ValueError:
-        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
-    # read progress cookie (supports legacy array or new object)
+def get_progress_from_cookie(request: Request) -> tuple[list[int], list[int]]:
     progress_cookie = request.cookies.get('progress', '')
     visited: list[int] = []
     completed: list[int] = []
     try:
         parsed = json.loads(progress_cookie) if progress_cookie else {}
         if isinstance(parsed, list):
-            # legacy: array of completed ids
             completed = [int(v) for v in parsed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
         elif isinstance(parsed, dict):
             raw_visited = parsed.get('visited', [])
@@ -338,7 +330,15 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
     except Exception:
         visited = []
         completed = []
+    return visited, completed
 
+@app.get('/enigme/{enigma_id}')
+def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
+    try:
+        enigma = get_enigma(enigma_id)
+    except ValueError:
+        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
+    visited, completed = get_progress_from_cookie(request)
     # mark current page as visited
     if enigma_id not in visited:
         visited.append(enigma_id)
@@ -369,10 +369,7 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
 
 @app.get('/interlude/discussion')
 def discussion_menu(request: Request):
-    # read progress cookie and mark discussion as visited
-    progress_cookie = request.cookies.get('progress', '')
-    visited: list[int] = []
-    completed: list[int] = []
+    visited, completed = get_progress_from_cookie(request) # read progress cookie and mark discussion as visited
     try:
         parsed = json.loads(progress_cookie) if progress_cookie else {}
         if isinstance(parsed, list):
