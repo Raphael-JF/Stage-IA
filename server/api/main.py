@@ -302,8 +302,8 @@ def render_discussion_page(
             'current_enigma_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
             'chat_history': chat_history,
             'discussion_temperature': discussion_temperature,
-            'visited': [],
-            'completed': [],
+            'visited': visited,
+            'completed': completed,
         },
     )
 
