@@ -112,13 +112,7 @@ input {
     background: rgba(215, 180, 96, 0.12);
 }
 
-.step-item.side-branch {
-    border-style: dashed;
-}
 
-.step-item.future {
-    opacity: 0.55;
-}
 
 .step-item .locked .step-label,
 .step-item.future .step-label {

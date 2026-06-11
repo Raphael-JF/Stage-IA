@@ -292,18 +292,17 @@ def render_discussion_page(
     chat_history: list[dict[str, str]],
     discussion_temperature: float = DEFAULT_DISCUSSION_TEMPERATURE,
 ):
+    visited, completed = get_progress_from_cookie(request)
     return templates.TemplateResponse(
         request,
         'discussion.html',
         {
             'request': request,
             'enigmes': ENIGMES,
-            'active_step_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
-            'current_enigma_id': DISCUSSION_UNLOCKS_ENIGMA_ID,
             'chat_history': chat_history,
             'discussion_temperature': discussion_temperature,
-            'visited': [],
-            'completed': [],
+            'visited': visited,
+            'completed': completed,
         },
     )
 
@@ -312,21 +311,13 @@ def render_discussion_page(
 def landing(request: Request):
     return templates.TemplateResponse(request, 'index.html', {'request': request})
 
-
-@app.get('/enigme/{enigma_id}')
-def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
-    try:
-        enigma = get_enigma(enigma_id)
-    except ValueError:
-        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
-    # read progress cookie (supports legacy array or new object)
+def get_progress_from_cookie(request: Request) -> tuple[list[int], list[int]]:
     progress_cookie = request.cookies.get('progress', '')
     visited: list[int] = []
     completed: list[int] = []
     try:
         parsed = json.loads(progress_cookie) if progress_cookie else {}
         if isinstance(parsed, list):
-            # legacy: array of completed ids
             completed = [int(v) for v in parsed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
         elif isinstance(parsed, dict):
             raw_visited = parsed.get('visited', [])
@@ -338,7 +329,15 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
     except Exception:
         visited = []
         completed = []
+    return visited, completed
 
+@app.get('/enigme/{enigma_id}')
+def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
+    try:
+        enigma = get_enigma(enigma_id)
+    except ValueError:
+        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
+    visited, completed = get_progress_from_cookie(request)
     # mark current page as visited
     if enigma_id not in visited:
         visited.append(enigma_id)
@@ -369,36 +368,12 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
 
 @app.get('/interlude/discussion')
 def discussion_menu(request: Request):
-    # read progress cookie and mark discussion as visited
-    progress_cookie = request.cookies.get('progress', '')
-    visited: list[int] = []
-    completed: list[int] = []
-    try:
-        parsed = json.loads(progress_cookie) if progress_cookie else {}
-        if isinstance(parsed, list):
-            completed = [int(v) for v in parsed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
-        elif isinstance(parsed, dict):
-            raw_visited = parsed.get('visited', [])
-            raw_completed = parsed.get('completed', [])
-            if isinstance(raw_visited, list):
-                visited = [int(v) for v in raw_visited if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
-            if isinstance(raw_completed, list):
-                completed = [int(v) for v in raw_completed if isinstance(v, int) or (isinstance(v, str) and v.isdigit())]
-    except Exception:
-        visited = []
-        completed = []
-
-    if DISCUSSION_UNLOCKS_ENIGMA_ID not in visited:
-        visited.append(DISCUSSION_UNLOCKS_ENIGMA_ID)
-
-    cookie_value = json.dumps({'visited': visited, 'completed': completed})
-
+    visited, completed = get_progress_from_cookie(request) # read progress cookie and mark discussion as visited
     resp = render_discussion_page(
         request,
         chat_history=[],
         discussion_temperature=DEFAULT_DISCUSSION_TEMPERATURE,
     )
-    resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
     return resp
 
 
@@ -423,8 +398,7 @@ def discussion_message(
         {
             'role': 'system',
             'content': (
-                "Tu es Otto, un vieux robot rouillé dans une aventure pedagogique sur les pirates. Ton capitaine est Barbe Noire, il te néglige et tu veux t'enfuir avec les deux marins qui te parlent pour trouver de la graisse."
-                "Tu reponds uniquement en francais, de facon concise et claire. "
+                "Tu es Otto, un vieux robot rouillé dans une aventure pedagogique sur les pirates. Ton capitaine est Barbe Noire, il te néglige et tu veux t'enfuir avec les deux marins qui te parlent pour trouver de la graisse. Tu dois répondre à tout type de questions uniquement en français, de façon concise et claire."
             ),
         },
         *chat_history,
