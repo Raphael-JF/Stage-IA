@@ -537,7 +537,8 @@ def submit_e4_player_answer(
     request: Request,
     idx: int,
     response: str = Form(...),
-):  try :
+):  
+    try :
         res = int(normalize_answer(response))
     except ValueError:
         return RedirectResponse(url=f'/enigme/4?error=wrong', status_code=status.HTTP_302_FOUND)
