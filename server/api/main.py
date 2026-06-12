@@ -616,8 +616,8 @@ def submit_answer(
             'enigmes': ENIGMES,
             'state_e4' :{
                 'phase' : 'answer_ready',
-                'question': e4_questions[question_id],
-                'question_id': question_id,
+                'question': e4_questions[e4_question_idx],
+                'question_id': e4_question_idx,
                 'answers': e4_game_answers,
                 'client_idx': idx,
             },
