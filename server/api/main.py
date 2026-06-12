@@ -483,6 +483,7 @@ Règles :
         event.set()
     
     await event.wait()
+    enigma = get_enigma(4)
     resp = templates.TemplateResponse(
         request,
         'enigme.html',
