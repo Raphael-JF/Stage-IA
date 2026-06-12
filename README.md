@@ -24,6 +24,8 @@
 * Pour la fermer
 `tmux kill-session -t NOM`
 
+# Ouvrir plusieurs Firefox sur plusieurs sessions
+`firefox -no-remote -P "profile"`
 
 # Prompt de niveau 3 pour "trouver l'humain"
 
