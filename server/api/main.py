@@ -619,7 +619,6 @@ def submit_answer(
                 'question': e4_questions[e4_question_idx],
                 'question_id': e4_question_idx,
                 'answers': e4_game_answers,
-                'client_idx': idx,
             },
             'active_step_id': enigma['id'],
             'error': error == 'wrong',
