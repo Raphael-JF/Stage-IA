@@ -447,6 +447,7 @@ async def add_prompt_to_e4(
 ):
     prompt = response
     idx = len(e4_game_answers) - 2
+    print(f"Received answer for question {question_id} from client {idx}: {prompt}")
     e4_game_answers.append({'content' : normalize_answer(prompt), 'role': f'{idx}'})
     if len(e4_game_answers) == 2:
         messages = [
