@@ -46,7 +46,7 @@
             <p class="e4-question-kicker">Question</p>
             <p class="e4-question-content">{{ state_e4.question }}</p>
         </div>
-        {% else if state_e4.phase == "answer_ready" %}
+        {% elif state_e4.phase == "answer_ready" %}
         <div class="e4-answers" id="answers-e4">
             {% for answer in state_e4.answers %}
             <article class="e4-answer">
