@@ -593,7 +593,7 @@ def submit_answer(
         if enigma_id == 4:
             if booleen_de_con:
                 booleen_de_con = False
-                e4_question_idx = e4_question_idx + 1 if e4_question_idx < len(e4_questions) else 0 
+                e4_question_idx = e4_question_idx + 1 if e4_question_idx + 1 < len(e4_questions) else 0 
             else:
                 booleen_de_con = True
             e4_game_answers.clear()
