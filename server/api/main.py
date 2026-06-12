@@ -341,14 +341,14 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
 
     if enigma['id'] == 4:
         if e4_question_idx == 0:
-            answers.append({'content' : "Placeholder1", 'role': 'ia'})
-            answers.append({'content' : "Placeholder2", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})
         elif e4_question_idx == 1:
-            answers.append({'content' : "Placeholder1", 'role': 'ia'})
-            answers.append({'content' : "Placeholder2", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})       
         elif e4_question_idx == 2:
-            answers.append({'content' : "Placeholder1", 'role': 'ia'})
-            answers.append({'content' : "Placeholder2", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})           
+            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})
         resp = templates.TemplateResponse(
             request,
             'enigme.html',
