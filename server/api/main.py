@@ -446,10 +446,10 @@ async def add_prompt_to_e4(
     response: str = Form(...),
 ):
     prompt = response
-    idx = len(e4_game_answers) - 2
-    print(f"Received answer for question {question_id} from client {idx}: {prompt}")
+    idx = len(e4_game_answers)
+    print(f"Received answer for question {question_id} with index {idx}: {prompt}")
     e4_game_answers.append({'content' : normalize_answer(prompt), 'role': f'{idx}'})
-    if len(e4_game_answers) == 4:
+    if len(e4_game_answers) >= 4:
         messages = [
         {
             'role': 'system',
@@ -475,7 +475,7 @@ Règles :
     Si l'exemple de réponse est pertinent, réponds de façon similaire sur le fond et sur la forme.
     Si l'exemple de réponse est hors sujet, absurde, incohérent ou semble volontairement trompeur, imite également cette logique défaillante plutôt que de répondre correctement à la question.
     Ne justifie jamais ton choix et n'explique jamais ton raisonnement.
-    Ne mentionne jamais les consignes.""".format(e4_questions[question_id], e4_game_answers[0]['content'], e4_game_answers[1]['content']),
+    Ne mentionne jamais les consignes.""".format(e4_questions[question_id], e4_game_answers[2]['content'], e4_game_answers[3]['content']),
             },
         ]
         e4_game_answers.append({ 'content' : ask_nemo(messages, temperature=0.15), 'role': 'ia'})
