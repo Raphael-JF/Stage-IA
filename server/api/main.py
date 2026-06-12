@@ -493,7 +493,7 @@ def submit_answer(
             )
             resp.set_cookie(
                 'progress',
-                cookie_value
+                cookie_value,
                 httponly=True,
                 max_age=31536000
             )
