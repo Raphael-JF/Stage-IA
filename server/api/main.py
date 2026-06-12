@@ -40,17 +40,10 @@ ENIGMES = [
         'id': 2,
         'title': 'La Carte lexicale',
         'paragraphs': [
-            "Une mystérieuse carte contient des mots organisés comme un lexique caché.",
-            "Comprendre le lien entre les mots vous permettra de continuer votre route.",
-            "Seul le mot juste ouvrira la porte vers la suite de l’aventure."
+            "Le couloir s'étend sur une vingtaine de mètres. Dans votre avancée, vous trouvez une mystérieuse carte sur laquelle des mots sont placés.",
         ],
-        'puzzle_type': 'graph',
-        'puzzle_intro': 'Le graphique ci-dessous révèle la logique de la carte.',
-        'graph_image': '/static/graphs/enigma_2.png',
-        'graph_alt': 'Graphique illustrant les liens entre les mots de la carte.',
-        'graph_caption': 'Les hauteurs représentent l’importance de chaque piste.',
-        'hint': 'Cherche un mot qui décrit la logique de cette carte.',
-        'accepted_answers': ['lexique', 'carte', 'carte lexicale']
+        'puzzle_intro': 'Comprendre le lien entre les mots vous permettra de continuer votre route. Trouvez l\'indice caché dans cette carte pour avancer.',
+        'accepted_answers': ['ia']
     },
     {
         'id': 3,
