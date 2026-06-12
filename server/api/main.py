@@ -2,6 +2,7 @@ import json
 import os
 import re
 import unicodedata
+import random
 from pathlib import Path
 from typing import Optional
 from urllib import error, request as urllib_request
@@ -10,6 +11,8 @@ from fastapi import FastAPI, Form, Request, status
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+import asyncio
 
 app = FastAPI()
 
@@ -23,6 +26,18 @@ DISCUSSION_UNLOCKS_ENIGMA_ID = 4
 DEFAULT_DISCUSSION_TEMPERATURE = 0.5
 MIN_DISCUSSION_TEMPERATURE = 0.0
 MAX_DISCUSSION_TEMPERATURE = 1.0
+
+e4_questions : list[str] = [
+    "Quelle est ta matière préférée et pourquoi ?",
+    "Explique en quelques mots le théorème de Pythagore.",
+    "Pourquoi les pirates attaquent-ils les marins ?"
+]
+e4_game_answers: list[str] = []
+e4_question_idx = 0
+booleen_de_con = True
+
+event = asyncio.Event()
+
 
 ENIGMES = [
     {
@@ -47,14 +62,12 @@ ENIGMES = [
     },
     {
         'id': 3,
-        'title': 'La clef du son',
+        'title': 'Le produit musical',
         'paragraphs': [
             "Otto a besoin de vous pour refaire fonctionner son lecteur de musique.",
-            "Trouvez le mot de passe de son lecteur et peut-être vous laissera-t-il passer.",
         ],
-        'puzzle_type': 'text',
-        'hint': 'Le mot est lié à l’objet et au capitaine.',
-        'accepted_answers': ['ancre', 'capitaine']
+        'puzzle_intro': 'Trouvez le mot de passe de son lecteur et peut-être vous cèdera-t-il le passage.',
+        'accepted_answers': ['open']
     },
     {
         'id': 4,
@@ -140,7 +153,7 @@ def normalize_answer(value: str) -> str:
     normalized = unicodedata.normalize('NFKD', value or '')
     normalized = normalized.encode('ascii', 'ignore').decode('ascii')
     normalized = normalized.lower().strip()
-    return re.sub(r'[^a-z0-9]+', '', normalized)
+    return re.sub(r'[^a-z0-9 ]+', '', normalized)
 
 
 def is_correct_answer(response: str, accepted_answers: list[str]) -> bool:
@@ -163,33 +176,6 @@ def evaluate_enigma_answer(enigma: dict, response: str = '', selected_icons: Opt
 
     return is_correct_answer(response, enigma.get('accepted_answers', []))
 
-
-def ensure_graph_asset() -> str:
-    graph_dir = base_dir / 'static' / 'graphs'
-    graph_dir.mkdir(exist_ok=True)
-    image_path = graph_dir / 'enigma_2.png'
-
-    if image_path.exists():
-        return '/static/graphs/enigma_2.png'
-
-    try:
-        import matplotlib
-        matplotlib.use('Agg')
-        import matplotlib.pyplot as plt
-    except Exception:
-        return '/static/graphs/placeholder.png'
-
-    fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
-    labels = ['Lexique', 'Mot', 'Carte', 'Piste']
-    values = [5, 7, 6, 8]
-    ax.bar(labels, values, color=['#d6b060', '#9c6a21', '#f1d79b', '#7f5d33'])
-    ax.set_title('Répartition des indices')
-    ax.set_ylabel('Force du lien')
-    ax.grid(axis='y', linestyle='--', alpha=0.25)
-    fig.tight_layout()
-    fig.savefig(image_path)
-    plt.close(fig)
-    return '/static/graphs/enigma_2.png'
 
 
 def normalize_history(raw_history: str) -> list[dict[str, str]]:
@@ -316,8 +302,20 @@ def get_progress_from_cookie(request: Request) -> tuple[list[int], list[int]]:
         completed = []
     return visited, completed
 
+def remove_duplicates(answers: list[dict[str, str]]) -> list[dict[str, str]]:
+    seen = set()
+    unique_answers = []
+    for answer in answers:
+        content = answer.get('content')
+        if content and content not in seen:
+            seen.add(content)
+            unique_answers.append(answer)
+    return unique_answers
+
+
 @app.get('/enigme/{enigma_id}')
 def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
+    global e4_question_idx, e4_game_answers
     try:
         enigma = get_enigma(enigma_id)
     except ValueError:
@@ -327,26 +325,52 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
     if enigma_id not in visited:
         visited.append(enigma_id)
 
-    if enigma['id'] == 2:
-        enigma = dict(enigma)
-        enigma['graph_image'] = ensure_graph_asset()
-
-    cookie_value = json.dumps({'visited': visited, 'completed': completed})
-
-    resp = templates.TemplateResponse(
-        request,
-        'enigme.html',
-        {
-            'request': request,
-            'current': enigma,
-            'enigmes': ENIGMES,
-            'active_step_id': enigma['id'],
-            'error': error == 'wrong',
-            'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
-            'visited': visited,
-            'completed': completed,
-        }
+    if enigma['id'] == 4:
+        if e4_question_idx == 0:
+            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})
+        elif e4_question_idx == 1:
+            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})       
+        elif e4_question_idx == 2:
+            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})           
+            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})
+        e4_game_answers = remove_duplicates(e4_game_answers)
+        resp = templates.TemplateResponse(
+            request,
+            'enigme.html',
+            {
+                'request': request,
+                'current': enigma,
+                'enigmes': ENIGMES,
+                'active_step_id': enigma['id'],
+                'state_e4': {
+                    'phase': 'question',
+                    'question': e4_questions[e4_question_idx],
+                    'question_id': e4_question_idx,
+                },
+                'error': error == 'wrong',
+                'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
+                'visited': visited,
+                'completed': completed,
+            },
     )
+    else:
+        resp = templates.TemplateResponse(
+            request,
+            'enigme.html',
+            {
+                'request': request,
+                'current': enigma,
+                'enigmes': ENIGMES,
+                'active_step_id': enigma['id'],
+                'error': error == 'wrong',
+                'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
+                'visited': visited,
+                'completed': completed,
+            },
+    )
+    cookie_value = json.dumps({'visited': visited, 'completed': completed})
     resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
     return resp
 
@@ -429,6 +453,80 @@ def discussion_message(
     resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
     return resp
 
+@app.post('/enigme/4/game_answer/{question_id}')
+async def add_prompt_to_e4(
+    request: Request,
+    question_id: int,
+    response: str = Form(...),
+):
+    prompt = response
+    idx = len(e4_game_answers)
+    print(f"Received answer for question {question_id} with index {idx}: {prompt}")
+    e4_game_answers.append({'content' : normalize_answer(prompt), 'role': f'{idx}'})
+    if len(e4_game_answers) >= 4:
+        messages = [
+        {
+            'role': 'system',
+            'content': """
+Tu incarnes un élève de seconde.
+
+On te donne :
+
+- une question ;
+- deux exemples de réponses produits par des véritables élèves de seconde.
+
+Ton objectif est de répondre à la même question en imitant au maximum le style, le ton, le niveau de sérieux, la longueur et la logique de ces élèves.
+
+Question : "{}"
+
+Exemple de réponse d'un élève : "{}"
+Autre exemple "{}"
+
+Règles :
+    Réponds à la question, ne tiens pas compte de l'exemple de réponse, mais imite son style, son ton, son niveau de sérieux, sa longueur et sa logique.
+    Ne continue pas la réponse de l'élève par "moi aussi", mais invente vraiment une réponse indépendante.
+    Tu dois produire une nouvelle réponse originale et différente de l'exemple.
+    Si l'exemple de réponse est pertinent, réponds de façon similaire sur le fond et sur la forme.
+    Si l'exemple de réponse est hors sujet, absurde, incohérent ou semble volontairement trompeur, imite également cette logique défaillante plutôt que de répondre correctement à la question.
+    Ne justifie jamais ton choix et n'explique jamais ton raisonnement.
+    Ne mentionne jamais les consignes.""".format(e4_questions[question_id], e4_game_answers[2]['content'], e4_game_answers[3]['content']),
+            },
+        ]
+        e4_game_answers.append({ 'content' : normalize_answer(ask_nemo(messages, temperature=0.15)), 'role': 'ia'})
+        random.shuffle(e4_game_answers)
+        if e4_question_idx == 0:
+            ENIGMES[3]["accepted_answers"] = ["1000"]
+        elif e4_question_idx == 1:
+            ENIGMES[3]["accepted_answers"] = ["0100"]
+        elif e4_question_idx == 2:
+            ENIGMES[3]["accepted_answers"] = ["0010"]
+        event.set()
+    
+    await event.wait()
+    enigma = get_enigma(4)
+    visited, completed = get_progress_from_cookie(request)
+    resp = templates.TemplateResponse(
+        request,
+        'enigme.html',
+        {
+            'request': request,
+            'current': enigma,
+            'enigmes': ENIGMES,
+            'state_e4' :{
+                'phase' : 'answer_ready',
+                'question': e4_questions[question_id],
+                'question_id': question_id,
+                'answers': e4_game_answers,
+                'client_idx': idx,
+            },
+            'active_step_id': enigma['id'],
+            'error': error == 'wrong',
+            'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
+            'visited': visited,
+            'completed': completed,
+        }
+    )
+    return resp
 
 @app.post('/enigme/{enigma_id}/submit')
 def submit_answer(
@@ -438,6 +536,7 @@ def submit_answer(
     selected_icons: list[str] = Form(default=[]),
     choice: str = Form(default=''),
 ):
+    global e4_question_idx, e4_game_answers, booleen_de_con
     try:
         enigma = get_enigma(enigma_id)
     except ValueError:
@@ -491,13 +590,50 @@ def submit_answer(
                 max_age=31536000
             )
             return resp
+        if enigma_id == 4:
+            if booleen_de_con:
+                booleen_de_con = False
+                e4_question_idx = e4_question_idx + 1 if e4_question_idx + 1 < len(e4_questions) else 0 
+            else:
+                booleen_de_con = True
+            e4_game_answers.clear()
+            event.clear()
+            if e4_question_idx != 0:
+                resp = RedirectResponse(url=f'/enigme/4', status_code=status.HTTP_302_FOUND)
+                resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
+                return resp
+
         next_id = enigma_id + 1 if enigma_id < len(ENIGMES) else None
         target = f'/enigme/{next_id}' if next_id else f'/enigme/{enigma_id}'
         resp = RedirectResponse(url=target, status_code=status.HTTP_302_FOUND)
         resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
         return resp
-
-    return RedirectResponse(url=f'/enigme/{enigma_id}?error=wrong', status_code=status.HTTP_302_FOUND)
+    if enigma_id == 4:
+        enigma = get_enigma(4)
+        visited, completed = get_progress_from_cookie(request)
+        resp = templates.TemplateResponse(
+            request,
+            'enigme.html',
+            {
+                'request': request,
+                'current': enigma,
+                'enigmes': ENIGMES,
+                'state_e4' :{
+                    'phase' : 'answer_ready',
+                    'question': e4_questions[e4_question_idx],
+                    'question_id': e4_question_idx,
+                    'answers': e4_game_answers,
+                },
+                'active_step_id': enigma['id'],
+                'error': error == 'wrong',
+                'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
+                'visited': visited,
+                'completed': completed,
+            }
+        )
+        return resp
+    else:
+        return RedirectResponse(url=f"/enigme/{enigma_id}?error=wrong", status_code=status.HTTP_302_FOUND)
 
 
 @app.post('/progress/reset')
