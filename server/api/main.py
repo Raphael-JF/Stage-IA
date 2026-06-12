@@ -608,30 +608,32 @@ def submit_answer(
         resp = RedirectResponse(url=target, status_code=status.HTTP_302_FOUND)
         resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
         return resp
-
-    enigma = get_enigma(4)
-    visited, completed = get_progress_from_cookie(request)
-    resp = templates.TemplateResponse(
-        request,
-        'enigme.html',
-        {
-            'request': request,
-            'current': enigma,
-            'enigmes': ENIGMES,
-            'state_e4' :{
-                'phase' : 'answer_ready',
-                'question': e4_questions[e4_question_idx],
-                'question_id': e4_question_idx,
-                'answers': e4_game_answers,
-            },
-            'active_step_id': enigma['id'],
-            'error': error == 'wrong',
-            'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
-            'visited': visited,
-            'completed': completed,
-        }
-    )
-    return resp
+    if enigma_id == 4:
+        enigma = get_enigma(4)
+        visited, completed = get_progress_from_cookie(request)
+        resp = templates.TemplateResponse(
+            request,
+            'enigme.html',
+            {
+                'request': request,
+                'current': enigma,
+                'enigmes': ENIGMES,
+                'state_e4' :{
+                    'phase' : 'answer_ready',
+                    'question': e4_questions[e4_question_idx],
+                    'question_id': e4_question_idx,
+                    'answers': e4_game_answers,
+                },
+                'active_step_id': enigma['id'],
+                'error': error == 'wrong',
+                'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
+                'visited': visited,
+                'completed': completed,
+            }
+        )
+        return resp
+    else:
+        return RedirectResponse(url=f'/enigme/{enigma_id}/game_answer/{}?error=wrong', status_code=status.HTTP_302_FOUND)
 
 
 @app.post('/progress/reset')
