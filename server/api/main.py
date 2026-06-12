@@ -605,7 +605,30 @@ def submit_answer(
         resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
         return resp
 
-    return RedirectResponse(url=f'/enigme/{enigma_id}/game_answer/{e4_question_idx}?error=wrong', status_code=status.HTTP_302_FOUND)
+    enigma = get_enigma(4)
+    visited, completed = get_progress_from_cookie(request)
+    resp = templates.TemplateResponse(
+        request,
+        'enigme.html',
+        {
+            'request': request,
+            'current': enigma,
+            'enigmes': ENIGMES,
+            'state_e4' :{
+                'phase' : 'answer_ready',
+                'question': e4_questions[question_id],
+                'question_id': question_id,
+                'answers': e4_game_answers,
+                'client_idx': idx,
+            },
+            'active_step_id': enigma['id'],
+            'error': error == 'wrong',
+            'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
+            'visited': visited,
+            'completed': completed,
+        }
+    )
+    return resp
 
 
 @app.post('/progress/reset')
