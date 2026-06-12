@@ -34,6 +34,7 @@ e4_questions : list[str] = [
 ]
 e4_game_answers: list[str] = []
 e4_question_idx = 0
+booleen_de_con = True
 
 event = asyncio.Event()
 
@@ -527,7 +528,6 @@ Règles :
     )
     return resp
 
-
 @app.post('/enigme/{enigma_id}/submit')
 def submit_answer(
     request: Request,
@@ -591,7 +591,11 @@ def submit_answer(
             )
             return resp
         if enigma_id == 4:
-            e4_question_idx = e4_question_idx + 1 if e4_question_idx < len(e4_questions) else 0 
+            if booleen_de_con:
+                booleen_de_con = False
+                e4_question_idx = e4_question_idx + 1 if e4_question_idx < len(e4_questions) else 0 
+            else:
+                booleen_de_con = True
             e4_game_answers.clear()
             event.clear()
             if e4_question_idx != 0:
