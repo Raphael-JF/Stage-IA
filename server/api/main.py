@@ -493,6 +493,12 @@ Règles :
         ]
         e4_game_answers.append({ 'content' : normalize_answer(ask_nemo(messages, temperature=0.15)), 'role': 'ia'})
         random.shuffle(e4_game_answers)
+        if e4_question_idx == 0:
+            ENIGMES[3]["accepted_answers"] = ["1000"]
+        elif e4_question_idx == 1:
+            ENIGMES[3]["accepted_answers"] = ["0100"]
+        elif e4_question_idx == 2:
+            ENIGMES[3]["accepted_answers"] = ["0010"]
         event.set()
     
     await event.wait()
@@ -587,6 +593,7 @@ def submit_answer(
         if enigma_id == 4:
             e4_question_idx = e4_question_idx + 1 if e4_question_idx < len(e4_questions) else 0 
             e4_game_answers.clear()
+            event.clear()
             if e4_question_idx != 0:
                 resp = RedirectResponse(url=f'/enigme/4', status_code=status.HTTP_302_FOUND)
                 resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
@@ -598,7 +605,7 @@ def submit_answer(
         resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
         return resp
 
-    return RedirectResponse(url=f'/enigme/{enigma_id}?error=wrong', status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(url=f'/enigme/{enigma_id}/game_answer/{e4_question_idx}?error=wrong', status_code=status.HTTP_302_FOUND)
 
 
 @app.post('/progress/reset')
