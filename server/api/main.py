@@ -322,6 +322,7 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
         elif e4_question_idx == 2:
             e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})           
             e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})
+        e4_game_answers = list(set(e4_game_answers))  # remove duplicates if any
         resp = templates.TemplateResponse(
             request,
             'enigme.html',
