@@ -532,33 +532,6 @@ Règles :
     )
     return resp
 
-@app.post('/enigme/4/submit/player{idx}')
-def submit_e4_player_answer(
-    request: Request,
-    idx: int,
-    response: str = Form(...),
-):  
-    try :
-        res = int(normalize_answer(response))
-    except ValueError:
-        return RedirectResponse(url=f'/enigme/4?error=wrong', status_code=status.HTTP_302_FOUND)
-
-    if normalize_answer(response) not in range(len(e4_game_answers)):
-        return RedirectResponse(url=f'/enigme/4?error=wrong', status_code=status.HTTP_302_FOUND)
-
-    if res != 1-idx:
-        return RedirectResponse(url=f'/enigme/4?error=wrong', status_code=status.HTTP_302_FOUND)
-    else:
-        e4_question_idx += 1
-        if e4_question_idx >= len(e4_questions):
-    
-        
-    # we consider the question answered when both answers have been submitted
-
-    cookie_value = json.dumps({'visited': visited, 'completed': completed})
-    resp = RedirectResponse(url=f'/enigme/4', status_code=status.HTTP_302_FOUND)
-    resp.set_cookie('progress', cookie_value, httponly=True, max_age=31536000)
-    return resp
 
 @app.post('/enigme/{enigma_id}/submit')
 def submit_answer(
