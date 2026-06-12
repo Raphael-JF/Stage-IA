@@ -445,6 +445,7 @@ async def add_prompt_to_e4(
     question_id: int,
     response: str = Form(...),
 ):
+    prompt = response
     idx = len(e4_game_answers) - 2
     e4_game_answers.append({'content' : normalize_answer(prompt), 'role': f'{idx}'})
     if len(e4_game_answers) == 2:
