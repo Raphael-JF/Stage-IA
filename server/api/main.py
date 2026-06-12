@@ -359,7 +359,7 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
                 'active_step_id': enigma['id'],
                 'state_e4': {
                     'phase': 'question',
-                    'question': e4_questions[e4_question_idx]
+                    'question': e4_questions[e4_question_idx],
                     'question_id': e4_question_idx,
                 }
                 'error': error == 'wrong',
