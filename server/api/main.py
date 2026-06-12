@@ -522,7 +522,7 @@ Règles :
                 'question_id': question_id,
                 'answers': e4_game_answers,
                 'client_idx': idx,
-            }
+            },
             'active_step_id': enigma['id'],
             'error': error == 'wrong',
             'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
