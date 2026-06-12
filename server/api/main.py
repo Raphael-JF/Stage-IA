@@ -176,33 +176,6 @@ def evaluate_enigma_answer(enigma: dict, response: str = '', selected_icons: Opt
     return is_correct_answer(response, enigma.get('accepted_answers', []))
 
 
-def ensure_graph_asset() -> str:
-    graph_dir = base_dir / 'static' / 'graphs'
-    graph_dir.mkdir(exist_ok=True)
-    image_path = graph_dir / 'enigma_2.png'
-
-    if image_path.exists():
-        return '/static/graphs/enigma_2.png'
-
-    try:
-        import matplotlib
-        matplotlib.use('Agg')
-        import matplotlib.pyplot as plt
-    except Exception:
-        return '/static/graphs/placeholder.png'
-
-    fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
-    labels = ['Lexique', 'Mot', 'Carte', 'Piste']
-    values = [5, 7, 6, 8]
-    ax.bar(labels, values, color=['#d6b060', '#9c6a21', '#f1d79b', '#7f5d33'])
-    ax.set_title('Répartition des indices')
-    ax.set_ylabel('Force du lien')
-    ax.grid(axis='y', linestyle='--', alpha=0.25)
-    fig.tight_layout()
-    fig.savefig(image_path)
-    plt.close(fig)
-    return '/static/graphs/enigma_2.png'
-
 
 def normalize_history(raw_history: str) -> list[dict[str, str]]:
     if not raw_history:
@@ -470,7 +443,7 @@ def discussion_message(
 async def add_prompt_to_e4(
     request: Request,
     question_id: int,
-    prompt: str = Form(...),
+    response: str = Form(...),
 ):
     idx = len(e4_game_answers) - 2
     e4_game_answers.append({'content' : normalize_answer(prompt), 'role': f'{idx}'})
@@ -500,7 +473,7 @@ Règles :
     Si l'exemple de réponse est pertinent, réponds de façon similaire sur le fond et sur la forme.
     Si l'exemple de réponse est hors sujet, absurde, incohérent ou semble volontairement trompeur, imite également cette logique défaillante plutôt que de répondre correctement à la question.
     Ne justifie jamais ton choix et n'explique jamais ton raisonnement.
-    Ne mentionne jamais les consignes.""".format(e4_questions[question_id], e4_game_answers[0], e4_game_answers[1]),
+    Ne mentionne jamais les consignes.""".format(e4_questions[question_id], e4_game_answers[0]['content'], e4_game_answers[1]['content']),
             },
         ]
         answers.append({ 'content' : ask_nemo(messages, temperature=0.15), 'role': 'ia'})
@@ -508,7 +481,6 @@ Règles :
         event.set()
     
     await event.wait()
-    answer = ask_nemo(messages, temperature=0.15)
     resp = templates.TemplateResponse(
         request,
         'enigme.html',
