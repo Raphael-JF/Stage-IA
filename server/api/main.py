@@ -536,7 +536,7 @@ def submit_answer(
     selected_icons: list[str] = Form(default=[]),
     choice: str = Form(default=''),
 ):
-    global e4_question_idx, e4_game_answers
+    global e4_question_idx, e4_game_answers, booleen_de_con
     try:
         enigma = get_enigma(enigma_id)
     except ValueError:
