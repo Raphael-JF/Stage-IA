@@ -484,6 +484,7 @@ Règles :
     
     await event.wait()
     enigma = get_enigma(4)
+    visited, completed = get_progress_from_cookie(request)
     resp = templates.TemplateResponse(
         request,
         'enigme.html',
