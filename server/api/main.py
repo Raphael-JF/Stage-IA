@@ -301,6 +301,17 @@ def get_progress_from_cookie(request: Request) -> tuple[list[int], list[int]]:
         completed = []
     return visited, completed
 
+def remove_duplicates(answers: list[dict[str, str]]) -> list[dict[str, str]]:
+    seen = set()
+    unique_answers = []
+    for answer in answers:
+        content = answer.get('content')
+        if content and content not in seen:
+            seen.add(content)
+            unique_answers.append(answer)
+    return unique_answers
+
+
 @app.get('/enigme/{enigma_id}')
 def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
     global e4_question_idx, e4_game_answers
@@ -323,7 +334,7 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
         elif e4_question_idx == 2:
             e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})           
             e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})
-        e4_game_answers = list(set(e4_game_answers))  # remove duplicates if any
+        e4_game_answers = remove_duplicates(e4_game_answers)
         resp = templates.TemplateResponse(
             request,
             'enigme.html',
