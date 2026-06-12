@@ -633,7 +633,7 @@ def submit_answer(
         )
         return resp
     else:
-        return RedirectResponse(url=f'/enigme/{enigma_id}/game_answer/{}?error=wrong', status_code=status.HTTP_302_FOUND)
+        return RedirectResponse(url=f"/enigme/{enigma_id}?error=wrong", status_code=status.HTTP_302_FOUND)
 
 
 @app.post('/progress/reset')
