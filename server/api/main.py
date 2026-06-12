@@ -361,7 +361,7 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
                     'phase': 'question',
                     'question': e4_questions[e4_question_idx],
                     'question_id': e4_question_idx,
-                }
+                },
                 'error': error == 'wrong',
                 'discussion_available': enigma['id'] >= DISCUSSION_UNLOCKS_ENIGMA_ID,
                 'visited': visited,
