@@ -89,7 +89,7 @@ ENIGMES = [
         ],
         'puzzle_intro': 'Complétez les trous pour retrouver le mot secret.',
         'accepted_answers': ['différent', 'different']
-    }
+    },
     {
         'id': 6,
         'title': 'La Carte au Trésor',
