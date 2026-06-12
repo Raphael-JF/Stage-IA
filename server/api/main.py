@@ -97,8 +97,7 @@ ENIGMES = [
             "Le trésor de Barbe Noire est repéré dans cette carte."
         ],
         'puzzle_type': 'ascii',
-        'puzzle_intro': 'Clique sur le symbole qui ouvre la voie.',
-        'puzzle_intro': "Devinez la position exacte du trésor."
+        'puzzle_intro': "Devinez la position exacte du trésor.",
         'accepted_answers': ['38', '83', '328', '283']
     },
     {
