@@ -30,19 +30,11 @@ ENIGMES = [
         'title': 'La Porte du Cachot',
         'paragraphs': [
             "Vos yeux s'habituent à l'obscurité. Sur le mur du cachot, quelqu'un a gravé des symboles au couteau.",
-            "À côté de la porte, une serrure à code à 4 chiffres brille faiblement dans la pénombre.",
+            "À côté de la porte, une serrure vocale brille faiblement dans la pénombre.",
             "Une note est glissée entre deux planches. La clé de votre liberté se cache dans ce code."
         ],
-        'puzzle_type': 'icons',
-        'puzzle_intro': 'Choisis les trois icônes qui ouvrent la porte.',
-        'icon_options': [
-            ('🗝️', 'clef'),
-            ('🕯️', 'lanterne'),
-            ('📜', 'parchemin'),
-            ('🧩', 'puzzle'),
-        ],
-        'hint': 'Le code est basé sur les symboles manquants dans la suite gravée.',
-        'accepted_answers': ['clef', 'lanterne', 'parchemin']
+        'puzzle_intro': 'Complétez la suite de symboles, puis renseignez la phrase associée à cette suite pour ouvrir la porte.',
+        'accepted_answers': ['le pirate attaque et pille le marin.', 'le pirate attaque et pille le marin']
     },
     {
         'id': 2,
@@ -501,7 +493,7 @@ def submit_answer(
             )
             resp.set_cookie(
                 'progress',
-                cookie_value,
+                cookie_value
                 httponly=True,
                 max_age=31536000
             )
