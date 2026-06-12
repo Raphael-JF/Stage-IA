@@ -9,10 +9,10 @@ cd /home/cbrazier/atelier_ia
 ## Ports
 
 ```text
-8000 → backend vLLM Mistral Nemo
-8001 → backend vLLM Qwen-VL
-8500 → interface Streamlit Nemo
-8501 → interface Streamlit Qwen-VL
+7000 → backend vLLM Mistral Nemo
+7000 → backend vLLM Qwen-VL
+9000 → interface Streamlit Nemo
+9000 → interface Streamlit Qwen-VL
 ```
 
 ## Lancer le backend vLLM

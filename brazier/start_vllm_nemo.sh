@@ -2,7 +2,7 @@
 
 source /home/cbrazier/venvs/llmserver/bin/activate
 
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=0
 export VLLM_USE_V1=0
 
 vllm serve /home/cbrazier/models/Mistral-Nemo-Instruct-2407 \
