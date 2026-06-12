@@ -543,7 +543,7 @@ def submit_e4_player_answer(
     except ValueError:
         return RedirectResponse(url=f'/enigme/4?error=wrong', status_code=status.HTTP_302_FOUND)
 
-    if normalize_answer(response) not in range(len(e4_game_answers):
+    if normalize_answer(response) not in range(len(e4_game_answers)):
         return RedirectResponse(url=f'/enigme/4?error=wrong', status_code=status.HTTP_302_FOUND)
 
     if res != 1-idx:
