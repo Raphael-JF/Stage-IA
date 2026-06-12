@@ -22,35 +22,39 @@ Les premiers modèles d'IA ne font que de deviner la suite d'une phrase. Comme c
 * Stratégie pour N = 2: on regarde le couple de symboles qui précèdent
 
 ## Dictionnaire
-* 🦜 = le
-* 🏴‍☠️ = pirate
-* ⚓ = marin
-* ⛵ = navigue
-* 🧜‍♀️ = sirène
-* 🌊 = parfois
-* 🔫 = pille
-* 🗡️ = attaque
-* 🪙 = et
-* 🧭 = la
+
+| 🦜 | 🏴‍☠️ | ⚓ | ⛵ | 🧜‍♀️ | 🌊 | 🔫 | 🗡️ | 🪙 | 🧭 |
+|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| le |  pirate |  marin | navigue | sirène | parfois | pille | attaque | et | la |
 
 ## Corpus
-1. Le pirate navigue parfois.
-🦜 🏴‍☠️ ⛵ 🌊
+* Le pirate navigue parfois.
 
-2. Parfois le pirate pille la sirène et navigue. 
-🌊 🦜 🏴‍☠️ 🔫 🧭 🧜‍♀️ 🪙 ⛵
+    🦜 🏴‍☠️ ⛵ 🌊
 
-3. Le marin attaque et pille.
-🦜 ⚓ 🗡️ 🪙 🔫
+* Parfois le pirate pille la sirène et navigue. 
 
-4. La sirène attaque et pille le marin.
-🧭 🧜‍♀️ 🗡️ 🪙 🔫 🦜 ⚓
+    🌊 🦜 🏴‍☠️ 🔫 🧭 🧜‍♀️ 🪙 ⛵
 
-5. Parfois le pirate pille et navigue.
-🌊 🦜 🏴‍☠️ 🔫 🪙 ⛵
+* Le marin attaque et pille.
 
-6. La sirène pille le marin
-🧭 🧜‍♀️ 🔫 🦜 ⚓
+    🦜 ⚓ 🗡️ 🪙 🔫
+
+* La sirène attaque et pille le marin.
+
+    🧭 🧜‍♀️ 🗡️ 🪙 🔫 🦜 ⚓
+
+* Parfois le pirate pille et navigue.
+
+    🌊 🦜 🏴‍☠️ 🔫 🪙 ⛵
+
+* La sirène pille le marin
+
+    🧭 🧜‍♀️ 🔫 🦜 ⚓
+
+## Complétez la phrase
+
+🦜 🏴‍☠️ 🗡️
 
 ## Réponse à l'enigme
 Le pirate attaque (et pille le marin). 
