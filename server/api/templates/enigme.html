@@ -27,7 +27,11 @@
 <p class="paragraph">{{ paragraph }}</p>
 {% endfor %}
 
-<form class="answer-form" method="post" action="/enigme/{{ current.id }}/submit">
+{% if current.id == 4 and state_e4.phase == "question" %}
+<form class="answer-form" method="post" action="/enigme/{{ current.id }}/game_answer/{{state_e4.question_id}}" onsubmit="e4_wait_view()">
+{% else %}
+<form class="answer-form" method="post" action="/enigme/{{ current.id }}/submit", onsubmit="e4_wait_view()">
+{% endif %}
     <section class="puzzle-card">
         <p class="puzzle-kicker">Section énigme</p>
         <h2 class="puzzle-heading">{{ current.title }}</h2>
@@ -36,7 +40,30 @@
         {% endif %}
 
     </section>
+    {% if current.id == 4 %}
+        {% if state_e4.phase == "question" %}
+        <div class="e4-question" id="question-e4">
+            <p class="e4-question-kicker">Question</p>
+            <p class="e4-question-content">{{ state_e4.question }}</p>
+        </div>
+        {% else if state_e4.phase == "answer_ready" %}
+        <div class="e4-answers" id="answers-e4">
+            {% for answer in state_e4.answers %}
+            <article class="e4-answer">
+                <div class="e4-answer-header">
+                    <span class="e4-answer-badge">Réponse {{ loop.index }}</span>
+                </div>
 
+                <p class="e4-answer-content">
+                    {{ answer.content }}
+                </p>
+            </article>
+            {% endfor %}
+        </div> 
+        <div id="wait-for-e4" class="message message-info">En attente des réponses des autres joueurs...</div>
+        {% endif %}
+    {% endif %}
+        
     <label class="answer-label" for="answer">Votre réponse</label>
     <input id="answer" name="response" type="text" autocomplete="off" placeholder="Entrez votre réponse ici" required>
     <button type="submit">Valider</button>

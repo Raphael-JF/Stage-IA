@@ -143,3 +143,20 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+function e4_wait_view() {
+    const waitElement = document.getElementById('wait-for-e4');
+    const questionElement = document.getElementById('question-e4'); 
+    const answersElement = document.getElementById('answers-e4'); 
+   
+    if (waitElement) {
+        waitElement.style.display = 'block';
+    }
+    if (questionElement) {
+        questionElement.style.display = 'none';
+    }
+    if (answersElement) {
+        answersElement.style.display = 'none';
+    }
+}
