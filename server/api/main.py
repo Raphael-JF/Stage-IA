@@ -449,7 +449,7 @@ async def add_prompt_to_e4(
     idx = len(e4_game_answers) - 2
     print(f"Received answer for question {question_id} from client {idx}: {prompt}")
     e4_game_answers.append({'content' : normalize_answer(prompt), 'role': f'{idx}'})
-    if len(e4_game_answers) == 2:
+    if len(e4_game_answers) == 4:
         messages = [
         {
             'role': 'system',
@@ -478,8 +478,8 @@ Règles :
     Ne mentionne jamais les consignes.""".format(e4_questions[question_id], e4_game_answers[0]['content'], e4_game_answers[1]['content']),
             },
         ]
-        answers.append({ 'content' : ask_nemo(messages, temperature=0.15), 'role': 'ia'})
-        random.shuffle(answers)
+        e4_game_answers.append({ 'content' : ask_nemo(messages, temperature=0.15), 'role': 'ia'})
+        random.shuffle(e4_game_answers)
         event.set()
     
     await event.wait()
