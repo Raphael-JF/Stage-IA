@@ -1,46 +1,54 @@
 import matplotlib.pyplot as plt
 
-positions = {
-    "pirate": (0.0, 0.0),
-    "corsaire": (0.4, 0.1),
-    "flibustier": (0.8, 0.0),
-    "boucanier": (0.5, 0.4),
-    "capitaine": (0.1, -0.5),
-    "équipage": (0.0, -1.0),
-    "moussaillon": (0.1, -1.5),
+points = {
+    # Lettre I
+    "trésor": (1.6, 2.35),
+    "carte": (1.5, 1.8),
+    "or": (1.4, 1.3),
 
-    "navire": (2.0, 1.0),
-    "galion": (1.6, 1.2),
-    "voile": (2.2, 1.5),
-    "boussole": (2.7, 1.0),
-    "océan": (2.4, 2.0),
-    "tempête": (2.8, 1.8),
+    # Lettre A
+    "navire": (4.1, 4.75),
+    "boussole": (4.65, 4.05),
+    "voile": (4.95, 4.85),
+    "océan": (5.75, 4.85),
+    "tempête": (5.25, 3.45),
 
-    "trésor": (4.0, 0.5),
-    "butin": (3.7, 0.2),
-    "carte": (4.3, 0.3),
-    "île": (4.5, -0.2),
+    "terre": (0.3, 0.08),
+    "capitaine": (1.0, 5.5),
+    "équipage": (2, 4.7),
+    "moussaillon": (3.2, 6.0),
 
-    "canon": (2.5, -1.5),
-    "abordage": (2.8, -1.2),
-    "sabre": (3.2, -1.4),
-    "mutinerie": (2.7, -1.9),
+    "bouteille": (3.3, 0.2),
+    "verre": (4.1, 1.8),
+    "stylo": (6.7, 0.2),
+
+    "canon": (4.85, 6.8),
+    "corsaire": (6, 6.95),
+    "sirène": (7.2, 5.5),
+    "banane": (7.2, 2.7),
+
+    "homme": (1.5, 7.0),
+    "femme": (2.2, 7.5),
+    "papa": (0.3, 6.9),
+    "maman": (1, 7.4),
 }
 
-fig, ax = plt.subplots(figsize=(10, 6))
+fig, ax = plt.subplots(figsize=(9, 7))
 
-for mot, (x, y) in positions.items():
-    ax.scatter(x, y)
-    ax.annotate(
-        mot,
-        (x, y),
-        xytext=(5, 5),
-        textcoords="offset points",
-        fontsize=10,
-    )
+ax.set_axisbelow(True)
+ax.grid(True, which='major', linestyle='-', alpha=0.4)
 
-ax.grid(True, alpha=0.3)
-ax.set_aspect("equal")
+for mot, (x, y) in points.items():
+    ax.scatter(x, y, s=60, color='brown')
+    ax.text(x - 0.3, y + 0.15, mot, fontsize=13)
+
+ax.set_xlim(-0.1, 8)
+ax.set_ylim(-0.1, 8)
+
+ax.set_xticks(range(0, 9))
+ax.set_yticks(range(0, 9))
+
+ax.set_aspect('equal')
 
 plt.tight_layout()
 plt.show()
