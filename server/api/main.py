@@ -152,7 +152,7 @@ def normalize_answer(value: str) -> str:
     normalized = unicodedata.normalize('NFKD', value or '')
     normalized = normalized.encode('ascii', 'ignore').decode('ascii')
     normalized = normalized.lower().strip()
-    return re.sub(r'[^a-z0-9]+', '', normalized)
+    return re.sub(r'[^a-z0-9 ]+', '', normalized)
 
 
 def is_correct_answer(response: str, accepted_answers: list[str]) -> bool:
@@ -491,7 +491,7 @@ Règles :
     Ne mentionne jamais les consignes.""".format(e4_questions[question_id], e4_game_answers[2]['content'], e4_game_answers[3]['content']),
             },
         ]
-        e4_game_answers.append({ 'content' : ask_nemo(messages, temperature=0.15), 'role': 'ia'})
+        e4_game_answers.append({ 'content' : normalize_answer(ask_nemo(messages, temperature=0.15)), 'role': 'ia'})
         random.shuffle(e4_game_answers)
         event.set()
     
