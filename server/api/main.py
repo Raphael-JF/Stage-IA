@@ -79,36 +79,27 @@ ENIGMES = [
         ],
         'puzzle_type': 'text',
         'hint': 'Le mot attendu prouve que tu es humain.',
-        'accepted_answers': ['humain', 'je suis humain']
+        'accepted_answers': [ ]
     },
     {
         'id': 5,
         'title': 'La Lettre Effacée',
         'paragraphs': [
             "Une vieille lettre révèle un message à reconstituer.",
-            "Les blancs indiquent la direction du trésor et la salle secrète.",
-            "Retourne la lettre dans ta tête et donne la bonne réponse."
         ],
-        'puzzle_type': 'blanks',
-        'puzzle_intro': 'Complète les trous pour retrouver le mot caché.',
-        'fill_in_text': 'Le trésor est sur la [direction] de la carte et le mot secret est [mot].',
-        'hint': 'Un mot caché dans la lettre te mène à la carte.',
-        'accepted_answers': ['carte', 'carte au trésor']
-    },
+        'puzzle_intro': 'Complétez les trous pour retrouver le mot secret.',
+        'accepted_answers': ['différent', 'different']
+    }
     {
         'id': 6,
         'title': 'La Carte au Trésor',
         'paragraphs': [
-            "La carte dévoile un réseau de flèches et de chemins.",
-            "L'orientation du trésor est essentielle pour atteindre la salle secrète.",
-            "Donne la direction correcte pour finir cette étape."
+            "Le trésor de Barbe Noire est repéré dans cette carte."
         ],
         'puzzle_type': 'ascii',
         'puzzle_intro': 'Clique sur le symbole qui ouvre la voie.',
-        'ascii_art': '   .-^.\n  /| |\\\n /_|_|_\\\n  [▲]  [◉]  [✦]\n',
-        'ascii_symbols': ['▲', '◉', '✦'],
-        'hint': 'Le trésor est indiqué par une direction simple.',
-        'accepted_answers': ['est']
+        'puzzle_intro': "Devinez la position exacte du trésor."
+        'accepted_answers': ['38', '83', '328', '283']
     },
     {
         'id': 7,
@@ -407,7 +398,7 @@ def discussion_message(
         {
             'role': 'system',
             'content': (
-                "Tu es Otto, un vieux robot rouillé dans une aventure pedagogique sur les pirates. Ton capitaine est Barbe Noire, il te néglige et tu veux t'enfuir avec les deux marins qui te parlent pour trouver de la graisse. Tu dois répondre à tout type de questions uniquement en français, de façon concise et claire."
+                "Tu es Otto, un vieux robot rouillé dans une aventure pedagogique sur les pirates. Ton capitaine est Barbe Noire, il te néglige et tu veux t'enfuir avec les deux marins qui te parlent pour trouver de la graisse. Tu dois répondre à tout type de questions uniquement en français, de façon concise et claire. Si on te demande de trouver la position d'une lettre  qui diffèrent parmi toutes les autres identiques sur une carte (ou quoi que ce soit de similaire), alors tu dis 'la lettre est l, elle se trouve en troisième ligne, 28ème colonne'"
             ),
         },
         *chat_history,
