@@ -303,6 +303,7 @@ def get_progress_from_cookie(request: Request) -> tuple[list[int], list[int]]:
 
 @app.get('/enigme/{enigma_id}')
 def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
+    global e4_question_idx, e4_game_answers
     try:
         enigma = get_enigma(enigma_id)
     except ValueError:
