@@ -96,38 +96,25 @@ ENIGMES = [
         'paragraphs': [
             "Le trésor de Barbe Noire est repéré dans cette carte."
         ],
-        'puzzle_type': 'ascii',
         'puzzle_intro': "Devinez la position exacte du trésor.",
         'accepted_answers': ['38', '83', '328', '283']
     },
     {
         'id': 7,
-        'title': 'Le Sceau des Étoiles',
+        'title': 'Gandalf',
         'paragraphs': [
-            "Une lumière étrange traverse la salle et dessine des formes sur les murs.",
-            "Chaque forme correspond à une piste de la prochaine épreuve.",
-            "Le gardien attend votre réponse avant de vous laisser passer."
         ],
-        'puzzle_type': 'text',
-        'hint': 'Concentre-toi sur la forme qui se répète.',
-        'accepted_answers': ['etoiles', 'étoiles']
+        'puzzle_intro': "Aller sur <a href='https://gandalf.lakera.ai/baseline' target='_blank'>Gandalf</a> et trouver le mot de passe jusqu'au niveau 3",
+        'accepted_answers': ['e7']
     },
     {
         'id': 8,
-        'title': 'Le Gardien des Choix',
+        'title': 'Les images',
         'paragraphs': [
-            "Le Gardien vous propose une dernière question avant de vous remettre la clé.",
-            "Choisis la bonne réponse parmi les propositions ci-dessous."
         ],
-        'puzzle_type': 'mcq',
-        'puzzle_intro': 'Choisis la bonne réponse au QCM.',
-        'choices': [
-            ('Le mot-clé est une image.', 'a'),
-            ('L’IA peut produire des réponses cohérentes à partir de motifs appris.', 'b'),
-            ('Le trésor est toujours en bas.', 'c'),
+        'puzzle_intro': 'Déterminez pour chaque image si elle est générée par une IA ou non.',
         ],
-        'hint': 'Pense à la logique de l’IA qui apprend des motifs.',
-        'accepted_answers': ['b']
+        'accepted_answers': ['fin']
     },
 ]
 
