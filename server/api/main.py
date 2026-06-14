@@ -104,7 +104,7 @@ ENIGMES = [
         'title': 'Gandalf',
         'paragraphs': [
         ],
-        'puzzle_intro': "Aller sur <a href='https://gandalf.lakera.ai/baseline' target='_blank'>Gandalf</a> et trouver le mot de passe jusqu'au niveau 3",
+        'puzzle_intro': "Allez sur https://gandalf.lakera.ai/baseline et trouver le mot de passe jusqu'au niveau 3",
         'accepted_answers': ['e7']
     },
     {
