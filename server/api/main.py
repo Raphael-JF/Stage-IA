@@ -113,7 +113,6 @@ ENIGMES = [
         'paragraphs': [
         ],
         'puzzle_intro': 'Déterminez pour chaque image si elle est générée par une IA ou non.',
-        ],
         'accepted_answers': ['fin']
     },
 ]
