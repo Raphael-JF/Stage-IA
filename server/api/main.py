@@ -317,14 +317,14 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
 
     if enigma['id'] == 4:
         if e4_question_idx == 0:
-            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})
-            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Ma matière préférée est l'informatique, car elle me permet de résoudre des problèmes complexes et de créer des solutions innovantes.", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Ma matière préférée est l'informatique, car elle me permet de comprendre comment fonctionnent les ordinateurs et les programmes que nous utilisons au quotidien. J'aime également la façon dont l'informatique peut être utilisée pour résoudre des problèmes complexes et pour créer de nouvelles technologies innovantes. En outre, l'informatique est une matière qui évolue constamment, ce qui la rend passionnante et stimulante.", 'role': 'ia'})
         elif e4_question_idx == 1:
-            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})
-            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})       
+            e4_game_answers.append({'content' : "Le théorème de Pythagore est un résultat mathématique qui s'applique dans un triangle rectangle. Il stipule que le carré de la longueur de l'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés.", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Le théorème de Pythagore établir une relation entre les côtés d'un triangle rectangle : le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés.", 'role': 'ia'})       
         elif e4_question_idx == 2:
-            e4_game_answers.append({'content' : "Placeholder1", 'role': 'ia'})           
-            e4_game_answers.append({'content' : "Placeholder2", 'role': 'ia'})
+            e4_game_answers.append({'content' : "Les pirates attaquent les marins pour s'emparer de leurs richesses, prendre le contrôle de leur navire ou capturer des otages pour demander une rançon. Ils peuvent également attaquer pour semer la terreur et le chaos.", 'role': 'ia'})           
+            e4_game_answers.append({'content' : "Les pirates attaquent les marins pour voler leurs biens et leur argent. Ils cherchent également à prendre le contrôle des navires et de leur cargaison pour en tirer un profit personnel.", 'role': 'ia'})
         e4_game_answers = remove_duplicates(e4_game_answers)
         resp = templates.TemplateResponse(
             request,

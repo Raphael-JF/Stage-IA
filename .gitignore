@@ -1,4 +1,7 @@
 *__pycache__*
 venv
 *.pdf
+!enigmes/version_eleve/*.pdf
 *.synctex.gz
+
+enigmes/version_eleve/embedding.jpeg
