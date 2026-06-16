@@ -43,15 +43,13 @@
                 placeholder="Ex: Je bloque, peux-tu me guider sans donner la reponse ?" required>
 
             <div class="prompt-actions">
-                <button type="button" id="temp-button" class="temp-button" title="Contrôler la créativité">
+                <button type="button" id="temp-button" class="temp-button" title="Contrôler la température">
                     🌡️
                 </button>
 
                 <div id="temp-menu" class="temp-menu hidden">
                     <div class="temp-menu-content">
-                        <div class="temp-menu-header">Créativité d'Otto</div>
-
-                        <input id="temperature" class="temp-slider" name="temperature" type="range" min="0" max="1.5"
+                        <input id="temperature" class="temp-slider" name="temperature" type="range" min="0" max="2.0"
                             step="0.1" value="{{ discussion_temperature }}">
                         <div class="temp-menu-footer">
                             <output id="temperature-value" class="temp-display"></output>
