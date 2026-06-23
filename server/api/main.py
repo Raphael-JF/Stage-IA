@@ -303,10 +303,10 @@ def show_enigma(request: Request, enigma_id: int, error: Optional[str] = None):
 
     if enigma['id'] == 4:
         if e4_question_idx == 0:
-            e4_game_answers.append({'content' : "ma matiere preferee est l'informatique, car elle me permet de resoudre des problèmes complexes et de creer des solutions innovantes", 'role': 'ia'})
-            e4_game_answers.append({'content' : "ma matiere preferee est l'informatique, car elle me permet de comprendre comment fonctionnent les ordinateurs et les programmes que nous utilisons au quotidiens jaime egalement la façon dont linformatique peut etre utilisee pour resoudre des problemes complexes et pour creer de nouvelles technologies innovantes en outre, leinformatique est une matiere qui evolue constamment, ce qui la rend passionnante et stimulante", 'role': 'ia'})
+            e4_game_answers.append({'content' : "ma matiere preferee est linformatique, car elle me permet de resoudre des problèmes complexes et de creer des solutions innovantes", 'role': 'ia'})
+            e4_game_answers.append({'content' : "ma matiere preferee est linformatique, car elle me permet de comprendre comment fonctionnent les ordinateurs et les programmes que nous utilisons au quotidiens jaime egalement la façon dont linformatique peut etre utilisee pour resoudre des problemes complexes et pour creer de nouvelles technologies innovantes en outre, leinformatique est une matiere qui evolue constamment, ce qui la rend passionnante et stimulante", 'role': 'ia'})
         elif e4_question_idx == 1:
-            e4_game_answers.append({'content' : "le theoreme de Pythagore est un resultat mathematique qui s'applique dans un triangle rectangle. Il stipule que le carre de la longueur de l'hypotenuse est egal à la somme des carres des longueurs des deux autres cotes", 'role': 'ia'})
+            e4_game_answers.append({'content' : "le theoreme de Pythagore est un resultat mathematique qui sapplique dans un triangle rectangle il stipule que le carre de la longueur de lhypotenuse est egal a la somme des carres des longueurs des deux autres cotes", 'role': 'ia'})
             e4_game_answers.append({'content' : "le theoreme de pythagore etablir une relation entre les cotes dun triangle rectangle: le carre de lhypotenuse est egal a la somme des carres des deux autres cotes", 'role': 'ia'})       
         elif e4_question_idx == 2:
             e4_game_answers.append({'content' : "les pirates attaquent les marins pour semparer de leurs richesses, prendre le contrôle de leur navire ou capturer des otages pour demander une rançon ils peuvent egalement attaquer pour semer la terreur et le chaos", 'role': 'ia'})           
