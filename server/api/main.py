@@ -25,7 +25,7 @@ VLLM_NEMO_MODEL = os.getenv('VLLM_NEMO_MODEL', 'mistral-nemo')
 DISCUSSION_UNLOCKS_ENIGMA_ID = 4
 DEFAULT_DISCUSSION_TEMPERATURE = 0.5
 MIN_DISCUSSION_TEMPERATURE = 0.0
-MAX_DISCUSSION_TEMPERATURE = 1.0
+MAX_DISCUSSION_TEMPERATURE = 5.0
 
 e4_questions : list[str] = [
     "Quelle est ta matière préférée et pourquoi ?",
