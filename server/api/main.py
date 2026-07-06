@@ -24,8 +24,6 @@ VLLM_NEMO_BASE_URL = os.getenv('VLLM_NEMO_BASE_URL', 'http://localhost:8001/v1')
 VLLM_NEMO_MODEL = os.getenv('VLLM_NEMO_MODEL', 'mistral-nemo')
 DISCUSSION_UNLOCKS_ENIGMA_ID = 4
 DEFAULT_DISCUSSION_TEMPERATURE = 0.5
-MIN_DISCUSSION_TEMPERATURE = 0.0
-MAX_DISCUSSION_TEMPERATURE = 1.0
 
 e4_questions : list[str] = [
     "Quelle est ta matière préférée et pourquoi ?",
@@ -182,18 +180,6 @@ def normalize_history(raw_history: str) -> list[dict[str, str]]:
         history.append({'role': role, 'content': cleaned[:2000]})
     return history
 
-
-def parse_temperature(raw_value: str) -> float:
-    try:
-        value = float(raw_value)
-    except (TypeError, ValueError):
-        return DEFAULT_DISCUSSION_TEMPERATURE
-
-    if value < MIN_DISCUSSION_TEMPERATURE:
-        return MIN_DISCUSSION_TEMPERATURE
-    if value > MAX_DISCUSSION_TEMPERATURE:
-        return MAX_DISCUSSION_TEMPERATURE
-    return value
 
 
 def ask_nemo(messages: list[dict[str, str]], temperature: float) -> str:
@@ -369,7 +355,7 @@ def discussion_message(
     history: str = Form(default='[]'),
     temperature: str = Form(default=str(DEFAULT_DISCUSSION_TEMPERATURE)),
 ):
-    selected_temperature = parse_temperature(temperature)
+    selected_temperature = temperature
     normalized_message = message.strip()
     if not normalized_message:
         return render_discussion_page(
