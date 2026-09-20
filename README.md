@@ -4,7 +4,7 @@
 
 * Backend de l'interface FastAPI : [server/api](/server/api/).
 
-* Histoire à compter aux élèves : [histoire/main.html](/histoire/main.html).
+* Histoire à conter aux élèves : [histoire/main.html](/histoire/main.html).
 
 * Pour lancer le serveur qui fait tourner l'interface (sur Deepeirb) `./start-app.sh`.
 
@@ -12,7 +12,7 @@
 `ssh -N -L XXXX:localhost:8000 deepeirb`
 (Si bien sûr deepeirb est un alias vers l'hôte SSH de la machine Deepeirb)
 
-* Le dossier [brazier](/brazier/) sera utilise lors de la Prompt battle. 
+* Le dossier [brazier](/brazier/) sera utilisé lors de la Prompt battle. 
 
 # Tmux
 * Pour voir les sessions
